@@ -11,7 +11,6 @@ if [ "$EXEC_DIR" != "$SATURN_BINUTILS_DIR" ]; then
 fi
 
 if [ "$1" = "clean" ]; then
-    # rm -rf bintuils-src
     rm -rf binutils-build
     exit
 fi
