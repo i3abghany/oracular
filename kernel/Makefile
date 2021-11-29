@@ -44,12 +44,11 @@ OBJ_FILES += entry.o
 qemu: kernel.elf
 	$(QEMU) $(QEMU_FLAGS) -kernel $<
 
-# Not working yet...
-debug: QEMU_FLAGS += -s -S
-debug: QEMU_FLAGS += -d int
-debug: QEMU_FLAGS += -no-reboot
-debug: QEMU_FLAGS += -no-shutdown
-debug: kernel.elf
+gdb: QEMU_FLAGS += -s -S
+gdb: QEMU_FLAGS += -d int
+gdb: QEMU_FLAGS += -no-reboot
+gdb: QEMU_FLAGS += -no-shutdown
+gdb: kernel.elf
 	setsid $(QEMU) $(QEMU_FLAGS) -kernel $< & true
 	gdb-multiarch -x .gdbinit
 
