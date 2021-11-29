@@ -3,3 +3,6 @@ toolchain/gcc/gcc-src
 
 toolchain/butils/binutils-src
 toolchain/butils/binutils-build
+
+kernel/*.o
+kernel/*.elf
