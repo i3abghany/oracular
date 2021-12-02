@@ -50,7 +50,7 @@ gdb: QEMU_FLAGS += -s -S
 gdb: QEMU_FLAGS += -d int
 gdb: QEMU_FLAGS += -no-reboot
 gdb: QEMU_FLAGS += -no-shutdown
-gdb: kernel.elf
+gdb: kernel/kernel.elf
 	setsid $(QEMU) $(QEMU_FLAGS) -kernel $< & true
 	gdb-multiarch -x .gdbinit
 
