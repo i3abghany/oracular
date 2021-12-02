@@ -1,11 +1,13 @@
 #!/bin/bash
 
-SATURN_TOP_LEVEL=$(git rev-parse --show-toplevel)
-SATURN_BINUTILS_DIR=$SATURN_TOP_LEVEL/toolchain/butils
+set -eo pipefail
+
+ORACULAR_TOP_LEVEL=$(git rev-parse --show-toplevel)
+ORACULAR_BINUTILS_DIR=$ORACULAR_TOP_LEVEL/toolchain/butils
 
 EXEC_DIR=$(pwd)
 
-if [ "$EXEC_DIR" != "$SATURN_BINUTILS_DIR" ]; then
+if [ "$EXEC_DIR" != "$ORACULAR_BINUTILS_DIR" ]; then
     echo 'script must be run from toolchain/butils dir.'
     exit
 fi
@@ -15,14 +17,10 @@ if [ "$1" = "clean" ]; then
     exit
 fi
 
-which riscv64-elf-ld > /dev/null && exit
+PREFIX=$HOME/opt/cross
+TARGET=riscv64-elf
 
-if [ "$PREFIX" = "" ]; then
-    echo "export PREFIX=\"\$HOME/opt/cross\"" >> ~/.bashrc
-    echo "export TARGET=\"riscv64-elf\"" >> ~/.bashrc
-    echo "export PATH=\"\$PREFIX/bin:\$PATH\"" >> ~/.bashrc
-    source ~/.bashrc
-fi
+# which $TARGET-ld > /dev/null && { echo "$TARGET binutlis already installed."; exit; }
 
 if ! [ -d binutils-src ]; then
     mkdir -v binutils-src
@@ -41,8 +39,8 @@ mkdir -p -v binutils-build
 cd binutils-build
 
 ../binutils-src/binutils-2.36.1/configure \
-    --target=$TARGET                      \
-    --prefix=$PREFIX                      \
+    --target="$TARGET"                    \
+    --prefix="$PREFIX"                    \
     --with-sysroot                        \
     --disable-nls                         \
     --disable-werror

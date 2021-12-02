@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -eo pipefail
 
 ORACULAR_TOP_LEVEL=$(git rev-parse --show-toplevel)
 ORACULAR_GCC_DIR=$ORACULAR_TOP_LEVEL/toolchain/gcc
@@ -19,12 +19,8 @@ fi
 
 which riscv64-linux-gcc > /dev/null && exit
 
-if [ "$PREFIX" = "" ]; then
-    echo "export PREFIX=\"\$HOME/opt/cross\"" >> ~/.bashrc
-    echo "export TARGET=\"riscv64-elf\"" >> ~/.bashrc
-    echo "export PATH=\"\$PREFIX/bin:\$PATH\"" >> ~/.bashrc
-    source ~/.bashrc
-fi
+PREFIX=$HOME/opt/cross
+TARGET=riscv64-elf
 
 if ! [ -d gcc-src ]; then
     mkdir -v gcc-src
@@ -36,17 +32,21 @@ if ! [ -d gcc-src ]; then
     echo 'Extracting gcc'
     tar xf gcc-11.1.0.tar.gz
 
-    cd ../
+    cd ..
 fi
 
-which $TARGET-as || { echo 'Could not find $(TARGET)-as; exitting'; exit 1; }
+which $TARGET-as || { echo "Could not find $TARGET-as; exitting"; exit 1; }
+
+pushd gcc-src/gcc-11.1.0/
+./contrib/download_prerequisites
+popd
 
 mkdir -p -v gcc-build
 cd gcc-build
 
 ../gcc-src/gcc-11.1.0/configure \
-    --target=$TARGET            \
-    --prefix=$PREFIX            \
+    --target="$TARGET"          \
+    --prefix="$PREFIX"          \
     --disable-nls               \
     --without-headers           \
     --enable-languages=c,c++
