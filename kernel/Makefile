@@ -1,5 +1,5 @@
 ARCH = riscv64
-TOOLCHAIN_PREFIX = ${HOME}/opt/cross/bin/
+TOOLCHAIN_PREFIX = ${HOME}/opt/cross/bin
 CC = $(TOOLCHAIN_PREFIX)/riscv64-elf-gcc
 LD = $(TOOLCHAIN_PREFIX)/riscv64-elf-ld
 AS = $(TOOLCHAIN_PREFIX)/riscv64-elf-as
@@ -38,10 +38,10 @@ QEMU_FLAGS += -m 128
 QEMU_FLAGS += -serial mon:stdio
 QEMU_FLAGS += -nographic
 
-SRC_FILES = kernel.c
+KSRC_FILES = kernel.c uart.c
 
-OBJ_FILES = $(patsubst %.c, %.o, $(SRC_FILES))
-OBJ_FILES += entry.o
+KOBJ_FILES = $(patsubst %.c, %.o, $(KSRC_FILES))
+KOBJ_FILES += entry.o
 
 qemu: kernel.elf
 	$(QEMU) $(QEMU_FLAGS) -kernel $<
@@ -54,10 +54,14 @@ gdb: kernel.elf
 	setsid $(QEMU) $(QEMU_FLAGS) -kernel $< & true
 	gdb-multiarch -x .gdbinit
 
-kernel.elf: $(SRC_FILES) entry.S
-	$(CC) $(CFLAGS) $(SRC_FILES) -o kernel.o
-	$(AS) entry.S -o entry.o
-	$(LD) $(LDFLAGS) $(OBJ_FILES) -o $@
+kernel.elf: $(KOBJ_FILES)
+	$(LD) $(LDFLAGS) $(KOBJ_FILES) -o $@
+
+%.o: %.c
+	$(CC) $(CFLAGS) $< -o $@
+
+%.o: %.S
+	$(AS) $< -o $@
 
 .PHONY: clean
 clean:

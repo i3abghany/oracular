@@ -1,17 +1,11 @@
 #include <stddef.h>
 #include <stdint.h>
 
-uint8_t *uart = (uint8_t *) 0x10000000;
-
-#define UART                (uint8_t *) 0x10000000
-#define UART_THR            (uint8_t *) (UART + 0x00)
-#define UART_LSR            (uint8_t *) (UART + 0x05)
-#define UART_LSR_EMPTY_MASK (uint8_t) 0x40
+#include "uart.h"
 
 int putchar(char ch) {
-    while ((*UART_LSR & UART_LSR_EMPTY_MASK) == 0)
-        ;
-    return *UART_THR = ch;
+    uart0_putc(ch);
+    return ch;
 }
 
 int puts(const char *str) {
@@ -25,6 +19,7 @@ int puts(const char *str) {
 }
 
 void kmain(void) {
+    uart0_init();
     puts("Oracular Spectacular\n");
     while (1)
         ;
