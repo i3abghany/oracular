@@ -1,6 +1,8 @@
-CC = riscv64-elf-gcc
-LD = riscv64-elf-ld
-AS = riscv64-elf-as
+ARCH = riscv64
+TOOLCHAIN_PREFIX = ${HOME}/opt/cross/bin/
+CC = $(TOOLCHAIN_PREFIX)/riscv64-elf-gcc
+LD = $(TOOLCHAIN_PREFIX)/riscv64-elf-ld
+AS = $(TOOLCHAIN_PREFIX)/riscv64-elf-as
 QEMU = qemu-system-riscv64
 
 CFLAGS =
