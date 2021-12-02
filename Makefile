@@ -27,7 +27,7 @@ CFLAGS += -fno-pie -nopie
 endif
 
 LDFLAGS =
-LDFLAGS += -T kernel.ld
+LDFLAGS += -T kernel/kernel.ld
 LDFLAGS += -nostdlib
 
 QEMU_FLAGS =
@@ -38,12 +38,12 @@ QEMU_FLAGS += -m 128
 QEMU_FLAGS += -serial mon:stdio
 QEMU_FLAGS += -nographic
 
-KSRC_FILES = kernel.c uart.c
+KSRC_FILES = kernel/kernel.c kernel/uart.c
 
 KOBJ_FILES = $(patsubst %.c, %.o, $(KSRC_FILES))
-KOBJ_FILES += entry.o
+KOBJ_FILES += kernel/entry.o
 
-qemu: kernel.elf
+qemu: kernel/kernel.elf
 	$(QEMU) $(QEMU_FLAGS) -kernel $<
 
 gdb: QEMU_FLAGS += -s -S
@@ -54,7 +54,7 @@ gdb: kernel.elf
 	setsid $(QEMU) $(QEMU_FLAGS) -kernel $< & true
 	gdb-multiarch -x .gdbinit
 
-kernel.elf: $(KOBJ_FILES)
+kernel/kernel.elf: $(KOBJ_FILES)
 	$(LD) $(LDFLAGS) $(KOBJ_FILES) -o $@
 
 %.o: %.c
@@ -65,4 +65,4 @@ kernel.elf: $(KOBJ_FILES)
 
 .PHONY: clean
 clean:
-	rm -f *.o *.elf *.d
+	rm -f kernel/*.o kernel/*.elf kernel/*.d
