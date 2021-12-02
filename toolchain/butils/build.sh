@@ -3,7 +3,7 @@
 set -eo pipefail
 
 ORACULAR_TOP_LEVEL=$(git rev-parse --show-toplevel)
-ORACULAR_GCC_DIR=$ORACULAR_TOP_LEVEL/toolchain/butils
+ORACULAR_BINUTILS_DIR=$ORACULAR_TOP_LEVEL/toolchain/butils
 
 EXEC_DIR=$(pwd)
 
@@ -17,10 +17,10 @@ if [ "$1" = "clean" ]; then
     exit
 fi
 
-which riscv64-elf-ld > /dev/null && exit
-
 PREFIX=$HOME/opt/cross
 TARGET=riscv64-elf
+
+# which $TARGET-ld > /dev/null && { echo "$TARGET binutlis already installed."; exit; }
 
 if ! [ -d binutils-src ]; then
     mkdir -v binutils-src
