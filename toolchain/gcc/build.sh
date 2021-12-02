@@ -37,6 +37,10 @@ fi
 
 which $TARGET-as || { echo "Could not find $TARGET-as; exitting"; exit 1; }
 
+pushd gcc-src/gcc-11.1.0/
+./contrib/download_prerequisites
+popd
+
 mkdir -p -v gcc-build
 cd gcc-build
 
