@@ -27,7 +27,7 @@ if ! [ -d gcc-src ]; then
     cd gcc-src
 
     echo 'Fetching gcc version 11.1.0'
-    curl -O http://mirror.veriteknik.net.tr/gnu/gcc/gcc-11.1.0/gcc-11.1.0.tar.gz
+    curl -O https://ftp.gnu.org/gnu/gcc/gcc-11.1.0/gcc-11.1.0.tar.gz
 
     echo 'Extracting gcc'
     tar xf gcc-11.1.0.tar.gz
@@ -49,7 +49,8 @@ cd gcc-build
     --prefix="$PREFIX"          \
     --disable-nls               \
     --without-headers           \
-    --enable-languages=c,c++
+    --enable-languages=c,c++ || echo "GCC source corrupted. please remove the
+    gcc/gcc-src directory and rerun the script.";
 
 make all-gcc -j$(nproc)
 make all-target-libgcc -j$(nproc)

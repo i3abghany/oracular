@@ -12,10 +12,10 @@ if [ "$EXEC_DIR" != "$ORACULAR_TOOLCHAIN_DIR" ]; then
     exit
 fi
 
-cd gcc
+cd butils
 ./build.sh
 
-cd ../butils
+cd ../gcc
 ./build.sh
 
 cd ..

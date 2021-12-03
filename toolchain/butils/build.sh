@@ -43,7 +43,8 @@ cd binutils-build
     --prefix="$PREFIX"                    \
     --with-sysroot                        \
     --disable-nls                         \
-    --disable-werror
+    --disable-werror || echo "Binutils source corrupted. please remove the
+    butils/binutils-src directory and rerun the script.";
 
 make -j$(nproc)
 make install -j$(nproc)
