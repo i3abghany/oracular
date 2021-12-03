@@ -38,8 +38,9 @@ QEMU_FLAGS += -bios none
 QEMU_FLAGS += -m 128
 QEMU_FLAGS += -serial mon:stdio
 QEMU_FLAGS += -nographic
+QEMU_FLAGS += -device virtio-keyboard-device
 
-KSRC_FILES = kernel/kernel.c kernel/uart.c
+KSRC_FILES = kernel/kernel.c kernel/uart.c kernel/console.c
 
 KOBJ_FILES = $(patsubst %.c, %.o, $(KSRC_FILES))
 KOBJ_FILES += kernel/entry.o

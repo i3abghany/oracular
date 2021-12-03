@@ -1,26 +1,24 @@
+#include <kernel/console.h>
 #include <stddef.h>
 #include <stdint.h>
-
-#include "uart.h"
-
-int putchar(char ch) {
-    uart0_putc(ch);
-    return ch;
-}
-
-int puts(const char *str) {
-    int i;
-
-    for (i = 0; str[i] != '\0'; i++) {
-        putchar(str[i]);
-    }
-
-    return i;
-}
 
 void kmain(void) {
     uart0_init();
     puts("Oracular Spectacular\n");
+
+    while (1) {
+        char c = read_char();
+        if (c == 8) {
+            putchar(8);
+            putchar(' ');
+            putchar(8);
+        } else if (c == 10 || c == 13) {
+            putchar('\n');
+        } else {
+            putchar(c);
+        }
+    }
+
     while (1)
         ;
 }

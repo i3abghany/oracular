@@ -1,6 +1,5 @@
-#include "uart.h"
-
-#include "common_defs.h"
+#include <kernel/common_defs.h>
+#include <kernel/uart.h>
 
 void uart0_init() {
     /* Mask all UART interrupts. */
@@ -35,8 +34,14 @@ void uart0_init() {
     mmio_write_byte(UART0_BASE, UART_IER, (1 << 0));
 }
 
-void uart0_putc(char c) {
+void uart0_put(uint8_t c) {
     while ((mmio_read_byte(UART0_BASE, UART_LSR) & (1 << 5)) == 0)
         ;
     mmio_write_byte(UART0_BASE, UART_THR, c);
+}
+
+uint8_t uart0_get() {
+    while ((mmio_read_byte(UART0_BASE, UART_LSR) & (1 << 0)) == 0)
+        ;
+    return mmio_read_byte(UART0_BASE, UART_RHR);
 }
