@@ -12,6 +12,8 @@ if [ "$EXEC_DIR" != "$ORACULAR_TOOLCHAIN_DIR" ]; then
     exit
 fi
 
+export PATH="$PATH:$HOME/opt/cross/bin"
+
 cd butils
 ./build.sh
 
