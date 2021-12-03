@@ -49,7 +49,8 @@ cd gcc-build
     --prefix="$PREFIX"          \
     --disable-nls               \
     --without-headers           \
-    --enable-languages=c,c++
+    --enable-languages=c,c++ || echo "GCC source corrupted. please remove the
+    gcc/gcc-src directory and rerun the script.";
 
 make all-gcc -j$(nproc)
 make all-target-libgcc -j$(nproc)
