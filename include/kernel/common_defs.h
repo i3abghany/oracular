@@ -3,9 +3,9 @@
 
 #include <stdint.h>
 
-#define write_byte_to_reg(base, offset, value) \
+#define mmio_write_byte(base, offset, value) \
     *((uint8_t *) (base + offset)) = (uint8_t) value
 
-#define read_byte_from_reg(base, offset) *((uint8_t *) (base + offset))
+#define mmio_read_byte(base, offset) *((uint8_t *) (base + offset))
 
 #endif

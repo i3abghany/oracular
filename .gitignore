@@ -6,3 +6,5 @@ toolchain/butils/binutils-build
 
 kernel/*.o
 kernel/*.elf
+
+.vscode/*
