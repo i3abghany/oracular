@@ -17,6 +17,7 @@
 #define UART_BAUD_MSB 1
 
 void uart0_init();
-void uart0_putc(char c);
+void uart0_put(uint8_t c);
+uint8_t uart0_get();
 
 #endif

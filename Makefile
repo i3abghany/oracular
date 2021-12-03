@@ -18,6 +18,7 @@ CFLAGS += -ggdb
 CFLAGS += -fno-builtin
 CFLAGS += -mno-relax
 CFLAGS += -fno-common
+CFLAGS += -Iinclude
 
 ifneq ($(shell $(CC) -dumpspecs 2>/dev/null | grep -e '[^f]no-pie'),)
 CFLAGS += -fno-pie -no-pie
