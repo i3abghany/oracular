@@ -4,7 +4,7 @@
 #include <kernel/uart.h>
 #include <stdint.h>
 
-int putchar(char ch);
+int putchar(int ch);
 int puts(const char *str);
 uint8_t read_char();
 

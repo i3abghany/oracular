@@ -1,6 +1,6 @@
 #include <kernel/console.h>
 
-int putchar(uint8_t ch) {
+int putchar(int ch) {
     uart0_put(ch);
     return ch;
 }
