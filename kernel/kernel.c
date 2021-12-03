@@ -8,7 +8,7 @@ void kmain(void) {
 
     while (1) {
         char c = read_char();
-        if (c == 8) {
+        if (c == 0x7f) {
             putchar(8);
             putchar(' ');
             putchar(8);
@@ -18,7 +18,4 @@ void kmain(void) {
             putchar(c);
         }
     }
-
-    while (1)
-        ;
 }
