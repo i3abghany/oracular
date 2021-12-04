@@ -7,6 +7,9 @@ void kmain(void) {
     puts("Oracular Spectacular\n");
     kprintf("Executing from hart #%d\n", (int) get_mhartid());
 
+    void trap_init();
+    trap_init();
+
     while (1) {
         char c = read_char();
         if (c == 0x7f) {

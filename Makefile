@@ -40,10 +40,11 @@ QEMU_FLAGS += -serial mon:stdio
 QEMU_FLAGS += -nographic
 QEMU_FLAGS += -device virtio-keyboard-device
 
-KSRC_FILES = kernel/kernel.c kernel/uart.c kernel/console.c kernel/rv.c
+KSRC_FILES = kernel/kernel.c kernel/uart.c kernel/console.c kernel/rv.c kernel/trap.c
+KASM_FILES = kernel/entry.S kernel/kvec.S
 
 KOBJ_FILES = $(patsubst %.c, %.o, $(KSRC_FILES))
-KOBJ_FILES += kernel/entry.o
+KOBJ_FILES += $(patsubst %.S, %.o, $(KASM_FILES))
 
 qemu: kernel/kernel.elf
 	$(QEMU) $(QEMU_FLAGS) -kernel $<
