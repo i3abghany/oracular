@@ -20,7 +20,8 @@ fi
 PREFIX=$HOME/opt/cross
 TARGET=riscv64-elf
 
-# which $TARGET-ld > /dev/null && { echo "$TARGET binutlis already installed."; exit; }
+export PATH="$PATH:$HOME/opt/cross/bin"
+which $TARGET-ld > /dev/null && { echo "$TARGET binutlis already installed."; exit; }
 
 if ! [ -d binutils-src ]; then
     mkdir -v binutils-src

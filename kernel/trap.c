@@ -1,4 +1,5 @@
 #include <kernel/console.h>
+#include <kernel/rv.h>
 #include <stdint.h>
 
 extern void trap_vec();
