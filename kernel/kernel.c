@@ -1,10 +1,11 @@
 #include <kernel/console.h>
-#include <stddef.h>
+#include <kernel/rv.h>
 #include <stdint.h>
 
 void kmain(void) {
     uart0_init();
     puts("Oracular Spectacular\n");
+    kprintf("Executing from hart #%d\n", (int) get_mhartid());
 
     void trap_init();
     trap_init();
