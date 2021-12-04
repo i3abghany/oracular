@@ -17,6 +17,7 @@ if [ "$1" = "clean" ]; then
     exit
 fi
 
+export PATH="$PATH:$HOME/opt/cross/bin/"
 which riscv64-linux-gcc > /dev/null && exit
 
 PREFIX=$HOME/opt/cross

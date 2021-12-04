@@ -25,11 +25,6 @@ jobs:
         cd ${{ github.workspace }}
         cd toolchain/gcc
         ./build.sh
-    - name: build gcc
-      run: |
-        cd ${{ github.workspace }}
-        cd toolchain/gcc
-        ./build.sh
     - name: compile kernel image
       run: |
         cd ${{ github.workspace }}
