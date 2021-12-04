@@ -7,5 +7,6 @@
 int putchar(int ch);
 int puts(const char *str);
 uint8_t read_char();
+int kprintf(const char *fmt, ...);
 
 #endif
