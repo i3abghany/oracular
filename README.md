@@ -26,7 +26,8 @@ cd oracular
 
 Download, build, and install GCC cross compiler for RISCV64. This is automated
 using the script `toolchain/build.sh` (which must be executed from the
-`toolchain` directory).
+`toolchain` directory). After the process is done, GCC and binutils will be
+installed in the directory `$HOME/opt/cross/bin`.
 
 ```console
 cd toolchain
