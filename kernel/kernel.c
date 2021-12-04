@@ -6,6 +6,9 @@ void kmain(void) {
     uart0_init();
     puts("Oracular Spectacular\n");
 
+    void trap_init();
+    trap_init();
+
     while (1) {
         char c = read_char();
         if (c == 0x7f) {
