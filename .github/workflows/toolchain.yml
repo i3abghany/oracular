@@ -1,4 +1,4 @@
-name: Build toolchain and make the kernel image
+name: Build toolchain
 
 on:
   push:
@@ -13,8 +13,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: install curl
-      run: sudo apt install curl
     - name: build binutils
       run: |
         cd ${{ github.workspace }}
@@ -25,7 +23,3 @@ jobs:
         cd ${{ github.workspace }}
         cd toolchain/gcc
         ./build.sh
-    - name: compile kernel image
-      run: |
-        cd ${{ github.workspace }}
-        make kernel/kernel.elf
