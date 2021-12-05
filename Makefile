@@ -1,25 +1,31 @@
 ARCH = riscv64
 TOOLCHAIN_PREFIX = ${HOME}/opt/cross/bin
 
-ifeq (, $(shell which riscv64-elf-gcc))
+ifneq (, $(shell which riscv64-elf-gcc))
+CC = riscv64-elf-gcc
+else ifneq (, $(shell which riscv64-unknown-elf-gcc))
+CC = riscv64-unknown-elf-gcc
+else
 CC = $(TOOLCHAIN_PREFIX)/riscv64-elf-gcc
 $(info Defaulting gcc path to $(CC))
-else
-CC = riscv64-elf-gcc
 endif
 
-ifeq (, $(shell which riscv64-elf-ld))
+ifneq (, $(shell which riscv64-elf-ld))
+LD = riscv64-elf-ld
+else ifneq (, $(shell which riscv64-unknown-elf-ld))
+LD = riscv64-unknown-elf-ld
+else
 LD = $(TOOLCHAIN_PREFIX)/riscv64-elf-ld
 $(info Defaulting ld path to $(LD))
-else
-LD = riscv64-elf-ld
 endif
 
-ifeq (, $(shell which riscv64-elf-as))
+ifneq (, $(shell which riscv64-elf-as))
+AS = riscv64-elf-as
+else ifneq (, $(shell which riscv64-unknown-elf-as))
+AS = riscv64-unknown-elf-as
+else
 AS = $(TOOLCHAIN_PREFIX)/riscv64-elf-as
 $(info Defaulting as path to $(AS))
-else
-AS = riscv64-elf-as
 endif
 
 QEMU = qemu-system-riscv64
