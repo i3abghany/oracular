@@ -12,7 +12,7 @@ based on it.
 ### Install prerequisites
 
 ```console
-sudo apt install make git curl qemu-system-misc libmpfr-dev libmpc-dev libgmp-dev
+sudo apt install make git curl qemu-system-misc libmpfr-dev libmpc-dev libgmp-dev gdb-multiarch
 ```
 
 ### Clone the project
