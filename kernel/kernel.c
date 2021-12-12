@@ -5,7 +5,6 @@
 void kmain(void) {
     uart0_init();
     puts("Oracular Spectacular\n");
-    kprintf("Executing from hart #%d\n", (int) get_mhartid());
 
     void trap_init();
     trap_init();
