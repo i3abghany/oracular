@@ -7,7 +7,7 @@ extern void timer_vec();
 uint64_t core_scratch[5];
 
 void timer_init() {
-    uint64_t interrupt_interval = 1000000;
+    uint64_t interrupt_interval = 10000000;
     uint64_t mtime = *CLINT_MTIME;
     *CLINT_MTIMECMP = mtime + interrupt_interval;
 
@@ -15,9 +15,13 @@ void timer_init() {
     core_scratch[4] = interrupt_interval;
     set_mscratch((uint64_t) &core_scratch[0]);
 
+    /* The only interrupt we handle in machine mode is timer interrupt. */
     set_mtvec((uint64_t) &timer_vec);
+
+    /* Set MIE, globally enable machine mode interrupts. */
     set_mstatus(get_mstatus() | (1 << 3));
 
+    /* Set MTIE, enable machine timer interrupt. */
     set_mie(get_mie() | (1 << 7));
 }
 
@@ -49,7 +53,16 @@ void prekernel() {
      */
     set_mepc((uint64_t) &kmain);
     delegate_events_to_supervisor();
-    timer_init();
 
+    /*
+     * Essentially disable physical memory protection to make all the memory
+     * available for supervisor mode.
+     */
+    set_pmpaddr0(0x3FFFFFFFFFFFFF);
+
+    /* Naturally aligned power-of-two region, >= 8 bytes. */
+    set_pmpcfg0(0xF);
+
+    timer_init();
     asm volatile("mret");
 }
