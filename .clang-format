@@ -5,4 +5,4 @@ IndentWidth: 4
 AlignConsecutiveMacros: true
 SpaceAfterCStyleCast: true
 SpaceBeforeAssignmentOperators: true
-ColumnLimit: 80
+ColumnLimit: 90
