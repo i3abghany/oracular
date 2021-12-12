@@ -65,8 +65,16 @@ QEMU_FLAGS += -serial mon:stdio
 QEMU_FLAGS += -nographic
 QEMU_FLAGS += -device virtio-keyboard-device
 
-KSRC_FILES = kernel/kernel.c kernel/uart.c kernel/console.c kernel/rv.c kernel/trap.c
-KASM_FILES = kernel/entry.S kernel/kvec.S
+KSRC_FILES = kernel/kernel.c    \
+			 kernel/uart.c      \
+			 kernel/console.c   \
+			 kernel/rv.c        \
+			 kernel/prekernel.c \
+			 kernel/trap.c
+
+KASM_FILES = kernel/entry.S     \
+			 kernel/kvec.S      \
+			 kernel/tvec.S
 
 KOBJ_FILES = $(patsubst %.c, %.o, $(KSRC_FILES))
 KOBJ_FILES += $(patsubst %.S, %.o, $(KASM_FILES))
@@ -90,7 +98,7 @@ kernel/kernel.elf: $(KOBJ_FILES)
 	$(CC) $(CFLAGS) $< -o $@
 
 %.o: %.S
-	$(AS) $< -o $@
+	$(AS) -g $< -o $@
 
 .PHONY: clean
 clean:
