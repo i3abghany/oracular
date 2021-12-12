@@ -42,6 +42,12 @@ uint64_t get_mstatus() {
     return ret;
 }
 
+uint64_t get_sstatus() {
+    uint64_t ret;
+    asm volatile("csrr %0, sstatus" : "=r"(ret));
+    return ret;
+}
+
 uint64_t get_sie() {
     uint64_t ret;
     asm volatile("csrr %0, sie" : "=r"(ret));
@@ -62,4 +68,8 @@ void set_mtvec(uint64_t value) { asm volatile("csrw mtvec, %0" : : "r"(value)); 
 void set_mscratch(uint64_t value) { asm volatile("csrw mscratch, %0" : : "r"(value)); }
 void set_mstatus(uint64_t value) { asm volatile("csrw mstatus, %0" : : "r"(value)); }
 void set_sie(uint64_t value) { asm volatile("csrw sie, %0" : : "r"(value)); }
+void set_sstatus(uint64_t value) { asm volatile("csrw sstatus, %0" : : "r"(value)); }
 void set_stvec(uint64_t value) { asm volatile("csrw stvec, %0" : : "r"(value)); }
+void set_pmpaddr0(uint64_t value) { asm volatile("csrw pmpaddr0, %0" : : "r"(value)); }
+void set_pmpcfg0(uint64_t value) { asm volatile("csrw pmpcfg0, %0" : : "r"(value)); }
+void set_satp(uint64_t value) { asm volatile("csrw satp, %0" : : "r"(value)); }

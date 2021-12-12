@@ -14,6 +14,7 @@ uint64_t get_mideleg();
 uint64_t get_mie();
 uint64_t get_mscratch();
 uint64_t get_mstatus();
+uint64_t get_sstatus();
 uint64_t get_sie();
 uint64_t get_time();
 
@@ -26,5 +27,9 @@ void set_mscratch(uint64_t value);
 void set_mstatus(uint64_t value);
 void set_sie(uint64_t value);
 void set_stvec(uint64_t value);
+void set_pmpaddr0(uint64_t value);
+void set_pmpcfg0(uint64_t value);
+void set_satp(uint64_t value);
+void set_sstatus();
 
 #endif
