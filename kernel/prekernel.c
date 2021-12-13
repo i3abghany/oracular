@@ -29,13 +29,13 @@ static inline void delegate_events_to_supervisor() {
     set_medeleg((uint64_t) 0xFFFF);
     set_mideleg((uint64_t) 0xFFFF);
     uint64_t sie = get_sie();
-    sie |= (1 << 9);    // SEIE (Exceptions enable)
-    sie |= (1 << 5);    // STIE (Timer interrupts enable)
-    sie |= (1 << 1);    // STIE (Software interrupts enable)
+    sie |= (1 << 9);  // SEIE (Exceptions enable)
+    sie |= (1 << 5);  // STIE (Timer interrupts enable)
+    sie |= (1 << 1);  // STIE (Software interrupts enable)
     set_sie(sie);
 }
 
-void prekernel() {
+__attribute__((noreturn)) void prekernel() {
     /* Set previous privilege to supervisor mode for `mret` to change to it. */
     uint64_t mstatus = get_mstatus();
     mstatus &= ~(3 << 11);
@@ -52,6 +52,7 @@ void prekernel() {
      * mode)
      */
     set_mepc((uint64_t) &kmain);
+    set_satp(0);
     delegate_events_to_supervisor();
 
     /*
@@ -60,9 +61,14 @@ void prekernel() {
      */
     set_pmpaddr0(0x3FFFFFFFFFFFFF);
 
-    /* Naturally aligned power-of-two region, >= 8 bytes. */
-    set_pmpcfg0(0xF);
+    /* Grant Read, Write, and Execute privileges. Indicate that the region is
+     * Naturally aligned power-of-two region, >= 8bytes. */
+    set_pmpcfg0(0x1F);
 
     timer_init();
     asm volatile("mret");
+
+    /* This won't be reached. */
+    while (1)
+        ;
 }

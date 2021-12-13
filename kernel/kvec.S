@@ -1,3 +1,4 @@
+.globl ktrap
 .globl trap_vec
 .align 4
 trap_vec:
@@ -35,7 +36,6 @@ trap_vec:
         sd t5, 232(sp)
         sd t6, 240(sp)
 
-        # Jump to trap handler in `trap.c`
         call ktrap
 
         ld ra, 0(sp)
@@ -72,5 +72,6 @@ trap_vec:
 
         addi sp, sp, 256
 
-        # Return to the address saved on entering the trap handler.
+        # Return to the address saved on entering the trap handler. We delegate
+        # all interrupts to be handled in the S mode.
         sret
