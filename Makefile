@@ -87,8 +87,7 @@ gdb: QEMU_FLAGS += -d int
 gdb: QEMU_FLAGS += -no-reboot
 gdb: QEMU_FLAGS += -no-shutdown
 gdb: kernel/kernel.elf
-	setsid $(QEMU) $(QEMU_FLAGS) -kernel $< & true
-	gdb-multiarch -x .gdbinit
+	$(QEMU) -kernel $< $(QEMU_FLAGS)
 
 kernel/kernel.elf: $(KOBJ_FILES)
 	echo $(KOBJ_FILES)

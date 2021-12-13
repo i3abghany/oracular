@@ -45,9 +45,22 @@ make qemu
 
 ## Debugging
 
-The Makefile has a target that builds the kernel, loads it into QEMU, and
-attaches GDB for debugging.
+The Makefile has a target that builds the kernel, loads it into QEMU with
+debugging options and then hangs waiting for GDB to connect. First, invoke the
+following command.
 
 ```console
 make gdb
 ```
+
+And then invoke `gdb-multiarch` in the repository top-level directory in another
+terminal.
+
+Note that loading `.gdbinit` automatically will initially fail. You'll have to
+add the following line to `${HOME}/.gdbinit`.
+
+```console
+add-auto-load-safe-path /PATH/TO/ORACULAR/.gdbinit
+```
+
+And you'll have to substiture the path with the appropriate oracular location.
