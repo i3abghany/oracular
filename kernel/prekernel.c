@@ -14,36 +14,36 @@ void timer_init()
 
     core_scratch[3] = (uint64_t) CLINT_MTIMECMP;
     core_scratch[4] = interrupt_interval;
-    set_mscratch((uint64_t) &core_scratch[0]);
+    set_csr(mscratch, (uint64_t) &core_scratch[0]);
 
     /* The only interrupt we handle in machine mode is timer interrupt. */
-    set_mtvec((uint64_t) &timer_vec);
+    set_csr(mtvec, (uint64_t) &timer_vec);
 
     /* Set MIE, globally enable machine mode interrupts. */
-    set_mstatus(get_mstatus() | (1 << 3));
+    set_csr(mstatus, get_csr(mstatus) | (1 << 3));
 
     /* Set MTIE, enable machine timer interrupt. */
-    set_mie(get_mie() | (1 << 7));
+    set_csr(mie, get_csr(mie) | (1 << 7));
 }
 
 static inline void delegate_events_to_supervisor()
 {
-    set_medeleg((uint64_t) 0xFFFF);
-    set_mideleg((uint64_t) 0xFFFF);
-    uint64_t sie = get_sie();
-    sie |= (1 << 9);  // SEIE (Exceptions enable)
-    sie |= (1 << 5);  // STIE (Timer interrupts enable)
-    sie |= (1 << 1);  // STIE (Software interrupts enable)
-    set_sie(sie);
+    set_csr(medeleg, (uint64_t) 0xFFFF);
+    set_csr(mideleg, (uint64_t) 0xFFFF);
+    uint64_t sie_value = get_csr(sie);
+    sie_value |= (1 << 9);  // SEIE (Exceptions enable)
+    sie_value |= (1 << 5);  // STIE (Timer interrupts enable)
+    sie_value |= (1 << 1);  // STIE (Software interrupts enable)
+    set_csr(sie, sie_value);
 }
 
 __attribute__((noreturn)) void prekernel()
 {
     /* Set previous privilege to supervisor mode for `mret` to change to it. */
-    uint64_t mstatus = get_mstatus();
-    mstatus &= ~(3 << 11);
-    mstatus |= (1 << 11);
-    set_mstatus(mstatus);
+    uint64_t mstatus_value = get_csr(mstatus);
+    mstatus_value &= ~(3 << 11);
+    mstatus_value |= (1 << 11);
+    set_csr(mstatus, mstatus_value);
 
     /*
      * When a trap is taken into M-mode, mepc is written with the virtual
@@ -54,19 +54,19 @@ __attribute__((noreturn)) void prekernel()
      * Hence, we set `mepc` to `kmain` for `mret` to jump to it (in supervisor
      * mode)
      */
-    set_mepc((uint64_t) &kmain);
-    set_satp(0);
+    set_csr(mepc, (uint64_t) &kmain);
+    set_csr(satp, 0);
     delegate_events_to_supervisor();
 
     /*
      * Essentially disable physical memory protection to make all the memory
      * available for supervisor mode.
      */
-    set_pmpaddr0(0x3FFFFFFFFFFFFF);
+    set_csr(pmpaddr0, 0x3FFFFFFFFFFFFF);
 
     /* Grant Read, Write, and Execute privileges. Indicate that the region is
      * Naturally aligned power-of-two region, >= 8bytes. */
-    set_pmpcfg0(0x1F);
+    set_csr(pmpcfg0, 0x1F);
 
     timer_init();
     asm volatile("mret");

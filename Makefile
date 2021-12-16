@@ -36,7 +36,6 @@ CFLAGS += -O3
 CFLAGS += -march=rv64g
 CFLAGS += -Wextra
 CFLAGS += -Werror
-CFLAGS += -pedantic
 CFLAGS += -mcmodel=medany
 CFLAGS += -ffreestanding
 CFLAGS += -c
@@ -70,7 +69,6 @@ QEMU_FLAGS += -device virtio-keyboard-device
 KSRC_FILES = kernel/kernel.c    \
 			 kernel/uart.c      \
 			 kernel/console.c   \
-			 kernel/rv.c        \
 			 kernel/prekernel.c \
 			 kernel/kalloc.c    \
 			 kernel/trap.c

@@ -14,7 +14,7 @@ void kmain(void)
     kmem_init();
 
     /* Enable supervisor software interrupts. */
-    set_sstatus(get_sstatus() | (1 << 1));
+    set_csr(sstatus, get_csr(sstatus) | (1 << 1));
 
     while (1) {
         char c = read_char();
