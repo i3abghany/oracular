@@ -32,6 +32,7 @@ QEMU = qemu-system-riscv64
 
 CFLAGS =
 CFLAGS += -Wall
+CFLAGS += -O3
 CFLAGS += -march=rv64g
 CFLAGS += -Wextra
 CFLAGS += -Werror
