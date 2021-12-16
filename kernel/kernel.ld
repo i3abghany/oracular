@@ -1,15 +1,27 @@
 OUTPUT_ARCH("riscv");
 ENTRY(start);
 
+MEMORY {
+ /* The -kernel QEMU option copies the image to that specific address. */
+  ram (wxa) : ORIGIN = 0x80000000, LENGTH = 128M
+}
+
 SECTIONS {
-     /* The -kernel QEMU option copies the image to that specific address. */
-    . = 0x80000000;
+    /* Starts at the address 0x80000000. */
 
     .text : ALIGN(4K) {
         *(.init)
         *(.text .text.*)
         PROVIDE(text_end = .);
-    }
+    } >ram
+
+    .rodata : ALIGN(4K) {
+        *(.rodata .rodata.*)
+    } >ram
+
+    .data : ALIGN(4K) {
+        *(.data .data.*)
+    } >ram
 
     .bss : ALIGN(4K) {
         PROVIDE(bss_start = .);
@@ -17,16 +29,11 @@ SECTIONS {
         . += 4096;
         PROVIDE(stack_base = .);
         PROVIDE(bss_end = .);
-    }
+    } >ram
 
-    .rodata : ALIGN(4K) {
-        *(.rodata .rodata.*)
-    }
+    . = ALIGN(4K);
 
-    .data : ALIGN(4K) {
-        *(.data .data.*)
-    }
-
-    PROVIDE(end = .);
+    PROVIDE(_kernel_mem_end = .);
+    PROVIDE(_physical_mem_end = ORIGIN(ram) + LENGTH(ram));
 } 
 
