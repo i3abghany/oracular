@@ -18,22 +18,42 @@ int puts(const char *str) {
 
 uint8_t read_char() { return uart0_get(); }
 
-static inline uint8_t digit_to_ascii(uint8_t d) {
-    if (d <= 9) {
-        return d + '0';
+static char digits[16] = "0123456789ABCDEF";
+
+static inline uint8_t digit_to_ascii(uint8_t d, uint8_t base) {
+    if (base > 16) {
+        kprintf("panic: digit_to_ascii");
+        for (;;)
+            ;
+    }
+
+    if (d < base) {
+        return digits[d];
     } else {
-        return d;
+        kprintf("panic: digit_to_ascii");
+        for (;;)
+            ;
     }
 }
 
-static void putint(int d) {
-    if (d < 10) {
-        putchar(digit_to_ascii(d));
+static void put_64bit_integer(uint64_t d, uint8_t base)
+{
+    if (d < base) {
+        putchar(digit_to_ascii(d, base));
         return;
     }
 
-    putint(d / 10);
-    putint(d % 10);
+    put_64bit_integer(d / base, base);
+    put_64bit_integer(d % base, base);
+}
+
+static void putint(int d) {
+    put_64bit_integer((uint64_t) d, 10);
+}
+
+static void putptr(uint64_t d)
+{
+    put_64bit_integer(d, 16);
 }
 
 int kprintf(const char *fmt, ...) {
@@ -53,6 +73,10 @@ int kprintf(const char *fmt, ...) {
             } else if (fmt[i + 1] == 'd') {
                 int d = va_arg(ap, int);
                 putint(d);
+                i++;
+            } else if (fmt[i + 1] == 'p') {
+                uint64_t p = va_arg(ap, uint64_t);
+                putptr(p);
                 i++;
             } else {
                 putchar(fmt[i]);

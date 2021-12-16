@@ -8,6 +8,7 @@ void kmain(void) {
 
     void trap_init();
     trap_init();
+
     /* Enable supervisor software interrupts. */
     set_sstatus(get_sstatus() | (1 << 1));
 
