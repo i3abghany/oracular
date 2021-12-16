@@ -1,6 +1,6 @@
 # OracularOS
 
-Oracular is a minimal unix-like operating system for the RISC-V ISA. The goal is
+Oracular is a minimal UNIX-like operating system for the RISC-V ISA. The goal is
 to learn about operating systems development and employ prominent systems
 literature in a real-world project.
 
@@ -43,7 +43,7 @@ QEMU.
 make qemu
 ```
 
-## Debugging
+### Debugging
 
 The Makefile has a target that builds the kernel, loads it into QEMU with
 debugging options and then hangs waiting for GDB to connect. First, invoke the
@@ -63,4 +63,4 @@ add the following line to `${HOME}/.gdbinit`.
 add-auto-load-safe-path /PATH/TO/ORACULAR/.gdbinit
 ```
 
-And you'll have to substiture the path with the appropriate oracular location.
+And you'll have to substitute the path with the appropriate oracular location.
