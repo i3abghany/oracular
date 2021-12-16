@@ -45,6 +45,7 @@ CFLAGS += -fno-builtin
 CFLAGS += -mno-relax
 CFLAGS += -fno-common
 CFLAGS += -Iinclude
+CFLAGS += -DKERNEL_DEBUG
 
 ifneq ($(shell $(CC) -dumpspecs 2>/dev/null | grep -e '[^f]no-pie'),)
 CFLAGS += -fno-pie -no-pie
@@ -71,6 +72,7 @@ KSRC_FILES = kernel/kernel.c    \
 			 kernel/console.c   \
 			 kernel/rv.c        \
 			 kernel/prekernel.c \
+			 kernel/kalloc.c    \
 			 kernel/trap.c
 
 KASM_FILES = kernel/entry.S     \
