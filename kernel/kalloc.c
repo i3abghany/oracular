@@ -25,7 +25,7 @@ static void *memset(void *dest, int c, size_t size)
 void kmem_init()
 {
 #ifdef KERNEL_DEBUG
-    kprintf("kmem: %p\n", (uint64_t) _kernel_mem_end);
+    kprintf("kmem_end: %p\n", (uint64_t) _kernel_mem_end);
     kprintf("phys_top: %p\n", (uint64_t) _physical_mem_end);
 #endif
 
@@ -36,7 +36,25 @@ void kmem_init()
         page_free((void *) page_addr);
 }
 
-void *page_alloc() { return NULL; }
+void *page_alloc()
+{
+    struct free_list_node *node = page_list;
+    if (node == NULL) {
+        kprintf("page_alloc: kernel out of memory\n");
+        for (;;)
+            ;
+    }
+
+    page_list = page_list->next;
+
+#ifdef KERNEL_DEBUG
+    kprintf("page_alloc: allocating page starting at: %p\n", (uint64_t) node);
+#endif
+
+    /* Always zero out free pages on allocation. */
+    memset(node, 0x00, PAGE_SIZE);
+    return (void *) node;
+}
 
 void page_free(void *page_addr)
 {
