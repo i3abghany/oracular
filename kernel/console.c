@@ -1,12 +1,14 @@
 #include <kernel/console.h>
 #include <stdarg.h>
 
-int putchar(int ch) {
+int putchar(int ch)
+{
     uart0_put(ch);
     return ch;
 }
 
-int puts(const char *str) {
+int puts(const char *str)
+{
     int i;
 
     for (i = 0; str[i] != '\0'; i++) {
@@ -20,7 +22,8 @@ uint8_t read_char() { return uart0_get(); }
 
 static char digits[16] = "0123456789ABCDEF";
 
-static inline uint8_t digit_to_ascii(uint8_t d, uint8_t base) {
+static inline uint8_t digit_to_ascii(uint8_t d, uint8_t base)
+{
     if (base > 16) {
         kprintf("panic: digit_to_ascii");
         for (;;)
@@ -47,16 +50,12 @@ static void put_64bit_integer(uint64_t d, uint8_t base)
     put_64bit_integer(d % base, base);
 }
 
-static void putint(int d) {
-    put_64bit_integer((uint64_t) d, 10);
-}
+static void putint(int d) { put_64bit_integer((uint64_t) d, 10); }
 
-static void putptr(uint64_t d)
+static void putptr(uint64_t d) { put_64bit_integer(d, 16); }
+
+int kprintf(const char *fmt, ...)
 {
-    put_64bit_integer(d, 16);
-}
-
-int kprintf(const char *fmt, ...) {
     va_list ap;
 
     va_start(ap, fmt);

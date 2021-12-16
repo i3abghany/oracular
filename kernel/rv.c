@@ -1,72 +1,84 @@
 #include <kernel/rv.h>
 
-uint64_t get_medeleg() {
+uint64_t get_medeleg()
+{
     uint64_t ret;
     asm volatile("csrr %0, medeleg" : "=r"(ret));
     return ret;
 }
 
-uint64_t get_mepc() {
+uint64_t get_mepc()
+{
     uint64_t ret;
     asm volatile("csrr %0, mepc" : "=r"(ret));
     return ret;
 }
 
-uint64_t get_mhartid() {
+uint64_t get_mhartid()
+{
     uint64_t ret;
     asm volatile("csrr %0, mhartid" : "=r"(ret));
     return ret;
 }
 
-uint64_t get_mideleg() {
+uint64_t get_mideleg()
+{
     uint64_t ret;
     asm volatile("csrr %0, mideleg" : "=r"(ret));
     return ret;
 }
 
-uint64_t get_mie() {
+uint64_t get_mie()
+{
     uint64_t ret;
     asm volatile("csrr %0, mie" : "=r"(ret));
     return ret;
 }
 
-uint64_t get_mscratch() {
+uint64_t get_mscratch()
+{
     uint64_t ret;
     asm volatile("csrr %0, mscratch" : "=r"(ret));
     return ret;
 }
 
-uint64_t get_mstatus() {
+uint64_t get_mstatus()
+{
     uint64_t ret;
     asm volatile("csrr %0, mstatus" : "=r"(ret));
     return ret;
 }
 
-uint64_t get_scause() {
+uint64_t get_scause()
+{
     uint64_t ret;
     asm volatile("csrr %0, scause" : "=r"(ret));
     return ret;
 }
 
-uint64_t get_sstatus() {
+uint64_t get_sstatus()
+{
     uint64_t ret;
     asm volatile("csrr %0, sstatus" : "=r"(ret));
     return ret;
 }
 
-uint64_t get_sie() {
+uint64_t get_sie()
+{
     uint64_t ret;
     asm volatile("csrr %0, sie" : "=r"(ret));
     return ret;
 }
 
-uint64_t get_sip() {
+uint64_t get_sip()
+{
     uint64_t ret;
     asm volatile("csrr %0, sip" : "=r"(ret));
     return ret;
 }
 
-uint64_t get_time() {
+uint64_t get_time()
+{
     uint64_t ret;
     asm volatile("csrr %0, time" : "=r"(ret));
     return ret;

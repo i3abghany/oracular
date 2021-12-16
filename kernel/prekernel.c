@@ -6,7 +6,8 @@ extern void timer_vec();
 
 uint64_t core_scratch[5];
 
-void timer_init() {
+void timer_init()
+{
     uint64_t interrupt_interval = 10000000;
     uint64_t mtime = *CLINT_MTIME;
     *CLINT_MTIMECMP = mtime + interrupt_interval;
@@ -25,7 +26,8 @@ void timer_init() {
     set_mie(get_mie() | (1 << 7));
 }
 
-static inline void delegate_events_to_supervisor() {
+static inline void delegate_events_to_supervisor()
+{
     set_medeleg((uint64_t) 0xFFFF);
     set_mideleg((uint64_t) 0xFFFF);
     uint64_t sie = get_sie();
@@ -35,7 +37,8 @@ static inline void delegate_events_to_supervisor() {
     set_sie(sie);
 }
 
-__attribute__((noreturn)) void prekernel() {
+__attribute__((noreturn)) void prekernel()
+{
     /* Set previous privilege to supervisor mode for `mret` to change to it. */
     uint64_t mstatus = get_mstatus();
     mstatus &= ~(3 << 11);

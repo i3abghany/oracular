@@ -2,7 +2,8 @@
 #include <kernel/rv.h>
 #include <stdint.h>
 
-void kmain(void) {
+void kmain(void)
+{
     uart0_init();
     puts("Oracular Spectacular\n");
 

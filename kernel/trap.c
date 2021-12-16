@@ -6,7 +6,8 @@ extern void trap_vec();
 
 void trap_init() { set_stvec((uint64_t) trap_vec); }
 
-void ktrap() {
+void ktrap()
+{
     uint64_t scause = get_scause();
 
     /* Supervisor software interrupts are only triggered by timers. */
