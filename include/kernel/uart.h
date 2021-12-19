@@ -3,18 +3,18 @@
 
 #include <stdint.h>
 
-#define UART0_BASE (uint8_t *) 0x10000000
+#define UART0_BASE 0x10000000
 
-#define UART_RHR 0 /* Receive Hold Register     */
-#define UART_THR 0 /* Transmit Hold Register    */
-#define UART_IER 1 /* Interrupt Enable Register */
-#define UART_FCR 2 /* FIFO Control Register     */
-#define UART_ISR 2 /* Interrupt Status Register */
-#define UART_LCR 3 /* Line Control Register     */
-#define UART_LSR 5 /* Line Status Register      */
+#define UART_RHR (uint8_t *) (UART0_BASE + 0) /* Receive Hold Register     */
+#define UART_THR (uint8_t *) (UART0_BASE + 0) /* Transmit Hold Register    */
+#define UART_IER (uint8_t *) (UART0_BASE + 1) /* Interrupt Enable Register */
+#define UART_FCR (uint8_t *) (UART0_BASE + 2) /* FIFO Control Register     */
+#define UART_ISR (uint8_t *) (UART0_BASE + 2) /* Interrupt Status Register */
+#define UART_LCR (uint8_t *) (UART0_BASE + 3) /* Line Control Register     */
+#define UART_LSR (uint8_t *) (UART0_BASE + 5) /* Line Status Register      */
 
-#define UART_BAUD_LSB 0
-#define UART_BAUD_MSB 1
+#define UART_BAUD_LSB (uint8_t *) (UART0_BASE + 0)
+#define UART_BAUD_MSB (uint8_t *) (UART0_BASE + 1)
 
 void uart0_init();
 void uart0_put(uint8_t c);

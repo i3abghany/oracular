@@ -31,9 +31,9 @@ static inline void delegate_events_to_supervisor()
     set_medeleg((uint64_t) 0xFFFF);
     set_mideleg((uint64_t) 0xFFFF);
     uint64_t sie = get_sie();
-    sie |= (1 << 9);  // SEIE (Exceptions enable)
-    sie |= (1 << 5);  // STIE (Timer interrupts enable)
-    sie |= (1 << 1);  // STIE (Software interrupts enable)
+    sie |= (1 << 9); /* SEIE (Exceptions enable) */
+    sie |= (1 << 5); /* STIE (Timer interrupts enable) */
+    sie |= (1 << 1); /* STIE (Software interrupts enable) */
     set_sie(sie);
 }
 
