@@ -1,6 +1,8 @@
 #include <kernel/console.h>
 #include <stdarg.h>
 
+static char digits[16] = "0123456789ABCDEF";
+
 int putchar(int ch)
 {
     uart0_put(ch);
@@ -19,8 +21,6 @@ int puts(const char *str)
 }
 
 uint8_t read_char() { return uart0_get(); }
-
-static char digits[16] = "0123456789ABCDEF";
 
 static inline uint8_t digit_to_ascii(uint8_t d, uint8_t base)
 {

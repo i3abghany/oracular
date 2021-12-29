@@ -8,13 +8,19 @@ void kmain(void)
     uart0_init();
     puts("Oracular Spectacular\n");
 
+    kprintf("enabling traps...");
     void trap_init();
     trap_init();
+    kprintf("done\n");
 
+    kprintf("initializing kernel memory...");
     kmem_init();
+    kprintf("done\n");
 
+    kprintf("enabling supervisor software interrupts...");
     /* Enable supervisor software interrupts. */
     set_sstatus(get_sstatus() | (1 << 1));
+    kprintf("done\n");
 
     while (1) {
         char c = read_char();
