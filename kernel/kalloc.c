@@ -40,9 +40,7 @@ void *page_alloc()
 {
     struct free_list_node *node = page_list;
     if (node == NULL) {
-        kprintf("page_alloc: kernel out of memory\n");
-        for (;;)
-            ;
+        panic("page_alloc: kernel out of memory\n");
     }
 
     page_list = page_list->next;
@@ -59,15 +57,11 @@ void *page_alloc()
 void page_free(void *page_addr)
 {
     if ((uint64_t) page_addr >= MEM_TOP || (uint64_t) page_addr < KMEM_END) {
-        kprintf("page_free: address outside of physical memory.");
-        for (;;)
-            ;
+        panic("page_free: address outside of physical memory.");
     }
 
     if ((uint64_t) page_addr % PAGE_SIZE != 0) {
-        kprintf("page_free: unaligned page address.");
-        for (;;)
-            ;
+        panic("page_free: unaligned page address.");
     }
 
 #ifdef KERNEL_DEBUG

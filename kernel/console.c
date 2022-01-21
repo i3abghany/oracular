@@ -25,17 +25,13 @@ uint8_t read_char() { return uart0_get(); }
 static inline uint8_t digit_to_ascii(uint8_t d, uint8_t base)
 {
     if (base > 16) {
-        kprintf("panic: digit_to_ascii");
-        for (;;)
-            ;
+        panic("digit_to_ascii\n");
     }
 
     if (d < base) {
         return digits[d];
     } else {
-        kprintf("panic: digit_to_ascii");
-        for (;;)
-            ;
+        panic("digit_to_ascii\n");
     }
 }
 
@@ -86,4 +82,11 @@ int kprintf(const char *fmt, ...)
     }
     va_end(ap);
     return 0;
+}
+
+__attribute__((noreturn)) void panic(const char *msg)
+{
+    kprintf("panic: %s\n", msg);
+    for (;;)
+        ;
 }

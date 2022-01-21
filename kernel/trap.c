@@ -16,8 +16,6 @@ void ktrap()
         /* Acknowledge the interrupt be resetting the pending bit. */
         set_sip(get_sip() & ~(1 << 1));
     } else {
-        kprintf("unknown kernel trap\n");
-        while (1)
-            ;
+        panic("unknown kernel trap\n");
     }
 }
