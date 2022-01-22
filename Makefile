@@ -78,6 +78,7 @@ KSRC_FILES = kernel/kernel.c    \
 			 kernel/rv.c        \
 			 kernel/prekernel.c \
 			 kernel/kalloc.c    \
+			 kernel/vm.c        \
 			 kernel/trap.c
 
 KASM_FILES = kernel/entry.S     \
