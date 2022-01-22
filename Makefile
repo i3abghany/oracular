@@ -72,18 +72,20 @@ QEMU_FLAGS += -serial mon:stdio
 QEMU_FLAGS += -nographic
 QEMU_FLAGS += -device virtio-keyboard-device
 
-KSRC_FILES = kernel/kernel.c    \
-			 kernel/uart.c      \
-			 kernel/console.c   \
-			 kernel/rv.c        \
-			 kernel/prekernel.c \
-			 kernel/kalloc.c    \
-			 kernel/vm.c        \
-			 kernel/trap.c
+KSRC_FILES =
+KSRC_FILES += kernel/console.c
+KSRC_FILES += kernel/kalloc.c
+KSRC_FILES += kernel/kernel.c
+KSRC_FILES += kernel/prekernel.c
+KSRC_FILES += kernel/rv.c
+KSRC_FILES += kernel/trap.c
+KSRC_FILES += kernel/uart.c
+KSRC_FILES += kernel/vm.c
 
-KASM_FILES = kernel/entry.S     \
-			 kernel/kvec.S      \
-			 kernel/tvec.S
+KASM_FILES =
+KASM_FILES += kernel/entry.S
+KASM_FILES += kernel/kvec.S
+KASM_FILES += kernel/tvec.S
 
 KOBJ_FILES = $(patsubst %.c, %.o, $(KSRC_FILES))
 KOBJ_FILES += $(patsubst %.S, %.o, $(KASM_FILES))
