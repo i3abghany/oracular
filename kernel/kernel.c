@@ -1,6 +1,8 @@
 #include <kernel/console.h>
-#include <kernel/kalloc.h>
+#include <kernel/kassert.h>
+#include <kernel/kmem.h>
 #include <kernel/rv.h>
+#include <kernel/vm.h>
 #include <stdint.h>
 
 void kmain(void)
@@ -17,8 +19,9 @@ void kmain(void)
     kmem_init();
     kprintf("done\n");
 
+    kvm_init();
+
     kprintf("enabling supervisor software interrupts...");
-    /* Enable supervisor software interrupts. */
     set_sstatus(get_sstatus() | (1 << 1));
     kprintf("done\n");
 

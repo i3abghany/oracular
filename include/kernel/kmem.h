@@ -1,7 +1,8 @@
-#ifndef __KERNEL_KALLOC_H
-#define __KERNEL_KALLOC_H
+#ifndef __KERNEL_KMEM_H
+#define __KERNEL_KMEM_H
 
 #define PAGE_SIZE 4096
+#define PAGE_MASK 0xFFF
 
 struct free_list_node {
     struct free_list_node *next;
