@@ -37,6 +37,8 @@ void map_npages(pagetable_t table, uint64_t vstart, uint64_t pstart, uint64_t n_
 
     for (uint64_t i = 0; i < n_pages; i++) {
         map(table, vcurr, pcurr, perm);
+        vcurr += PAGE_SIZE;
+        pcurr += PAGE_SIZE;
     }
 }
 
