@@ -4,10 +4,21 @@
 
 static pagetable_t kpagetable;
 
+extern char _text_start[];
+extern char _text_end[];
+
+static void map_text_section(pagetable_t kernel_table)
+{
+    uint64_t tstart = (uint64_t) _text_start;
+    uint64_t tend = (uint64_t) _text_end;
+    map_range(kernel_table, tstart, tstart, tend - tstart, PTE_X_MASK | PTE_R_MASK);
+}
+
 static pagetable_t kpt_create()
 {
     pagetable_t kernel_table = (pagetable_t) page_alloc();
     map_npages(kernel_table, UART0_BASE, UART0_BASE, 1, PTE_W_MASK | PTE_R_MASK);
+    map_text_section(kernel_table);
     return kernel_table;
 }
 
