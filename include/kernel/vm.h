@@ -40,6 +40,14 @@ void map_npages(pagetable_t table, uint64_t vstart, uint64_t pstart, uint64_t n_
                 uint64_t perm);
 
 /*
+ * Utility helper to map the range from @vstart up to @vstart + @size to the corresponding
+ * physical frames. Currently, @vstart and @pstart have to be page-aligned. Also, @size
+ * must be a multiple of the page size.
+ */
+void map_range(pagetable_t table, uint64_t vstart, uint64_t pstart, uint64_t size,
+               uint64_t perm);
+
+/*
  * Map a kernel page to a physical frame.
  */
 void kmap(uint64_t vaddr, uint64_t phys_addr, uint64_t perm);

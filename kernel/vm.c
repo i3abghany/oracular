@@ -1,4 +1,5 @@
 #include <kernel/kmem.h>
+#include <kernel/kassert.h>
 #include <kernel/vm.h>
 
 static pagetable_t kpagetable;
@@ -40,6 +41,21 @@ void map_npages(pagetable_t table, uint64_t vstart, uint64_t pstart, uint64_t n_
         vcurr += PAGE_SIZE;
         pcurr += PAGE_SIZE;
     }
+}
+
+void map_range(pagetable_t table, uint64_t vstart, uint64_t pstart, uint64_t size,
+               uint64_t perm)
+{
+    kassert((vstart & PAGE_MASK) == 0);
+    kassert((pstart & PAGE_MASK) == 0);
+
+    // TODO: relieve this constraint (by rounding up to the nearest n pages).
+    kassert(((vstart + size) & PAGE_MASK) == 0);
+    kassert(((pstart + size) & PAGE_MASK) == 0);
+
+    uint64_t n_pages = size / PAGE_SIZE;
+    kprintf("%d\n", n_pages);
+    map_npages(table, vstart, pstart, n_pages, perm);
 }
 
 void map(pagetable_t table, uint64_t vaddr, uint64_t phys_addr, uint64_t perm)
