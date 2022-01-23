@@ -17,20 +17,32 @@ SECTIONS {
         PROVIDE(_text_end = .);
     } >ram
 
-    .rodata : ALIGN(4K) {
-        *(.rodata .rodata.*)
+    .data : ALIGN(4K) {
+        PROVIDE(_data_start = .);
+        *(.data .data.*)
+        . = ALIGN(16);
+        *(.sdata .sdata.*)
+        . = ALIGN(4K);
+        PROVIDE(_data_end = .);
     } >ram
 
-    .data : ALIGN(4K) {
-        *(.data .data.*)
+    .rodata : ALIGN(4K) {
+        PROVIDE(_rodata_start = .);
+        *(.rodata .rodata.*)
+        . = ALIGN(16);
+        *(.srodata .srodata.*)
+        . = ALIGN(4K);
+        PROVIDE(_rodata_end = .);
     } >ram
 
     .bss : ALIGN(4K) {
-        PROVIDE(bss_start = .);
+        PROVIDE(_bss_start = .);
         *(.bss .bss.*)
-        . += 4096;
-        PROVIDE(stack_base = .);
-        PROVIDE(bss_end = .);
+        . = ALIGN(4K);
+        PROVIDE(_stack_start = .);
+        . += 0x10000;
+        PROVIDE(_stack_end = .);
+        PROVIDE(_bss_end = .);
     } >ram
 
     . = ALIGN(4K);
