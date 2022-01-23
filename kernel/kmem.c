@@ -25,7 +25,7 @@ static void *memset(void *dest, int c, size_t size)
 void kmem_init()
 {
 #ifdef KERNEL_DEBUG
-    kprintf("kmem_end: %p\n", (uint64_t) _kernel_mem_end);
+    kprintf("\nkmem_end: %p\n", (uint64_t) _kernel_mem_end);
     kprintf("phys_top: %p\n", (uint64_t) _physical_mem_end);
 #endif
 
@@ -57,11 +57,11 @@ void *page_alloc()
 void page_free(void *page_addr)
 {
     if ((uint64_t) page_addr >= MEM_TOP || (uint64_t) page_addr < KMEM_END) {
-        panic("page_free: address outside of physical memory.");
+        panic("page_free: address outside of physical memory: %p.", page_addr);
     }
 
     if ((uint64_t) page_addr % PAGE_SIZE != 0) {
-        panic("page_free: unaligned page address.");
+        panic("page_free: unaligned page address: %p.", page_addr);
     }
 
 #ifdef KERNEL_DEBUG
