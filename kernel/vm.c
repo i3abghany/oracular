@@ -31,6 +31,14 @@ void kmap(uint64_t vaddr, uint64_t phys_addr, uint64_t perm)
 
 void map(pagetable_t table, uint64_t vaddr, uint64_t phys_addr, uint64_t perm)
 {
+    if (vaddr & PAGE_MASK) {
+        panic("unaligned virtual address");
+    }
+
+    if (phys_addr & PAGE_MASK) {
+        panic("unaligned physical address");
+    }
+
     uint64_t vpns[3] = {
         (vaddr >> 12) & 0x1FF,
         (vaddr >> 21) & 0x1FF,
