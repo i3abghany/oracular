@@ -40,7 +40,7 @@ CFLAGS += -pedantic
 CFLAGS += -mcmodel=medany
 CFLAGS += -ffreestanding
 CFLAGS += -c
-CFLAGS += -ggdb
+CFLAGS += -gdwarf-2
 CFLAGS += -fno-builtin
 CFLAGS += -mno-relax
 CFLAGS += -fno-common

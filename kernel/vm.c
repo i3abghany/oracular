@@ -4,10 +4,36 @@
 
 static pagetable_t kpagetable;
 
+extern char _text_start[];
+extern char _text_end[];
+
+extern char _data_start[];
+extern char _physical_mem_end[];
+
+static void map_text_section(pagetable_t kernel_table)
+{
+    uint64_t tstart = (uint64_t) _text_start;
+    uint64_t tend = (uint64_t) _text_end;
+    map_range(kernel_table, tstart, tstart, tend - tstart, PTE_X_MASK | PTE_R_MASK);
+}
+
+/*
+ * We map all "data" sections starting from the .data to the end of the memory image.
+ * Hence, data section must be defined directly after the .text section.
+ */
+static void map_data_section(pagetable_t kernel_table)
+{
+    uint64_t dstart = (uint64_t) _data_start;
+    uint64_t dend = (uint64_t) _physical_mem_end;
+    map_range(kernel_table, dstart, dstart, dend - dstart, PTE_R_MASK | PTE_W_MASK);
+}
+
 static pagetable_t kpt_create()
 {
     pagetable_t kernel_table = (pagetable_t) page_alloc();
     map_npages(kernel_table, UART0_BASE, UART0_BASE, 1, PTE_W_MASK | PTE_R_MASK);
+    map_text_section(kernel_table);
+    map_data_section(kernel_table);
     return kernel_table;
 }
 
@@ -46,6 +72,10 @@ void map_npages(pagetable_t table, uint64_t vstart, uint64_t pstart, uint64_t n_
 void map_range(pagetable_t table, uint64_t vstart, uint64_t pstart, uint64_t size,
                uint64_t perm)
 {
+#ifdef KERNEL_DEBUG
+    kprintf("map_range: vs: %p, ps: %p\n", vstart, pstart);
+    kprintf("map_range: size: %d\n", size);
+#endif
     kassert((vstart & PAGE_MASK) == 0);
     kassert((pstart & PAGE_MASK) == 0);
 
@@ -54,7 +84,6 @@ void map_range(pagetable_t table, uint64_t vstart, uint64_t pstart, uint64_t siz
     kassert(((pstart + size) & PAGE_MASK) == 0);
 
     uint64_t n_pages = size / PAGE_SIZE;
-    kprintf("%d\n", n_pages);
     map_npages(table, vstart, pstart, n_pages, perm);
 }
 
@@ -68,6 +97,10 @@ void map(pagetable_t table, uint64_t vaddr, uint64_t phys_addr, uint64_t perm)
         panic("unaligned physical address: 0x%p", phys_addr);
     }
 
+#ifdef KERNEL_DEBUG
+    kprintf("map: vaddr: %p, paddr: %p\n", vaddr, phys_addr);
+#endif
+
     uint64_t vpns[3] = {
         (vaddr >> 12) & 0x1FF,
         (vaddr >> 21) & 0x1FF,
@@ -77,14 +110,14 @@ void map(pagetable_t table, uint64_t vaddr, uint64_t phys_addr, uint64_t perm)
     pte_t *pte;
     for (int level = 2; level > 0; level--) {
         pte = &table[vpns[level]];
-        if (!entry_is_valid(*pte)) {
+        if (entry_is_valid(*pte)) {
+            uint64_t pa = ((((uint64_t) *pte) >> 10) << 12);
+            table = (pagetable_t) pa;
+        } else {
             void *pa = page_alloc();
             table = (pagetable_t) pa;
             *pte = ((((uint64_t) pa) >> 12) << 10);
             *pte |= PTE_V_MASK;
-        } else {
-            uint64_t pa = ((((uint64_t) pte) >> 10) << 12);
-            table = (pagetable_t) pa;
         }
     }
 
