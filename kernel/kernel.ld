@@ -38,6 +38,8 @@ SECTIONS {
     .bss : ALIGN(4K) {
         PROVIDE(_bss_start = .);
         *(.bss .bss.*)
+        . = ALIGN(16);
+        *(.sbss .sbss.*)
         . = ALIGN(4K);
         PROVIDE(_stack_start = .);
         . += 0x10000;

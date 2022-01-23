@@ -63,6 +63,9 @@ LDFLAGS =
 LDFLAGS += -T kernel/kernel.ld
 LDFLAGS += -nostdlib
 
+# TODO: strip unwanted sections so that there are no "orphan sections".
+# LDFLAGS += --orphan-handling=error
+
 QEMU_FLAGS =
 QEMU_FLAGS += -machine virt
 QEMU_FLAGS += -smp 1
