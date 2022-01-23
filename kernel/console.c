@@ -1,5 +1,4 @@
 #include <kernel/console.h>
-#include <stdarg.h>
 
 static char digits[16] = "0123456789ABCDEF";
 
@@ -55,22 +54,29 @@ int kprintf(const char *fmt, ...)
     va_list ap;
 
     va_start(ap, fmt);
+    kvprintf(fmt, ap);
+    va_end(ap);
+    return 0;
+}
+
+int kvprintf(const char *fmt, va_list args)
+{
     for (uint32_t i = 0; fmt[i] != '\0'; i++) {
         if (fmt[i] == '%') {
             if (fmt[i + 1] == 'c') {
-                char c = (char) va_arg(ap, int);
+                char c = (char) va_arg(args, int);
                 putchar(c);
                 i++;
             } else if (fmt[i + 1] == 's') {
-                const char *str = va_arg(ap, const char *);
+                const char *str = va_arg(args, const char *);
                 puts(str);
                 i++;
             } else if (fmt[i + 1] == 'd') {
-                int d = va_arg(ap, int);
+                int d = va_arg(args, int);
                 putint(d);
                 i++;
             } else if (fmt[i + 1] == 'p') {
-                uint64_t p = va_arg(ap, uint64_t);
+                uint64_t p = va_arg(args, uint64_t);
                 putptr(p);
                 i++;
             } else {
@@ -80,13 +86,6 @@ int kprintf(const char *fmt, ...)
             putchar(fmt[i]);
         }
     }
-    va_end(ap);
-    return 0;
-}
 
-__attribute__((noreturn)) void panic(const char *msg)
-{
-    kprintf("panic: %s\n", msg);
-    for (;;)
-        ;
+    return 0;
 }

@@ -1,4 +1,5 @@
 #include <kernel/console.h>
+#include <kernel/kassert.h>
 #include <kernel/kmem.h>
 #include <kernel/rv.h>
 #include <kernel/vm.h>
