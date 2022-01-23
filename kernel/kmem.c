@@ -8,8 +8,8 @@ struct free_list_node *page_list;
 extern char _kernel_mem_end[];
 extern char _physical_mem_end[];
 
-static uint64_t KMEM_END;
-static uint64_t MEM_TOP;
+uint64_t KMEM_END = 0xDEADBEEF;
+uint64_t MEM_TOP = 0xDEADBEEF;
 
 static void *memset(void *dest, int c, size_t size)
 {
