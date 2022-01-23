@@ -74,7 +74,7 @@ QEMU_FLAGS += -device virtio-keyboard-device
 
 KSRC_FILES =
 KSRC_FILES += kernel/console.c
-KSRC_FILES += kernel/kalloc.c
+KSRC_FILES += kernel/kmem.c
 KSRC_FILES += kernel/kernel.c
 KSRC_FILES += kernel/prekernel.c
 KSRC_FILES += kernel/rv.c

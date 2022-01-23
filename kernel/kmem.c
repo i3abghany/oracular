@@ -1,5 +1,5 @@
 #include <kernel/console.h>
-#include <kernel/kalloc.h>
+#include <kernel/kmem.h>
 #include <stddef.h>
 #include <stdint.h>
 

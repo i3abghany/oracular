@@ -1,4 +1,4 @@
-#include <kernel/kalloc.h>
+#include <kernel/kmem.h>
 #include <kernel/vm.h>
 
 static pagetable_t kpagetable;
