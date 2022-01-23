@@ -4,6 +4,9 @@
 
 extern void trap_vec();
 
+/*
+ * Values taken from the RISC-V Privileged ISA Spec (sec. 4.1.9)
+ */
 static const char *scause_to_string(uint64_t scause)
 {
     switch (scause) {
