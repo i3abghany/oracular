@@ -1,5 +1,5 @@
-#include <kernel/kmem.h>
 #include <kernel/kassert.h>
+#include <kernel/kmem.h>
 #include <kernel/vm.h>
 
 static pagetable_t kpagetable;
@@ -61,11 +61,11 @@ void map_range(pagetable_t table, uint64_t vstart, uint64_t pstart, uint64_t siz
 void map(pagetable_t table, uint64_t vaddr, uint64_t phys_addr, uint64_t perm)
 {
     if (vaddr & PAGE_MASK) {
-        panic("unaligned virtual address");
+        panic("unaligned virtual address: 0x%p", vaddr);
     }
 
     if (phys_addr & PAGE_MASK) {
-        panic("unaligned physical address");
+        panic("unaligned physical address: 0x%p", phys_addr);
     }
 
     uint64_t vpns[3] = {
