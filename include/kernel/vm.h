@@ -33,6 +33,13 @@ typedef uint64_t *pagetable_t;
 void map(pagetable_t table, uint64_t vaddr, uint64_t phys_addr, uint64_t perm);
 
 /*
+ * Utility helper to map n consecutive virtual pages to their corresponding n physical
+ * frames.
+ */
+void map_npages(pagetable_t table, uint64_t vstart, uint64_t pstart, uint64_t n_pages,
+                uint64_t perm);
+
+/*
  * Map a kernel page to a physical frame.
  */
 void kmap(uint64_t vaddr, uint64_t phys_addr, uint64_t perm);
