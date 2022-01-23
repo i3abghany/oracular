@@ -84,14 +84,14 @@ void map(pagetable_t table, uint64_t vaddr, uint64_t phys_addr, uint64_t perm)
     pte_t *pte;
     for (int level = 2; level > 0; level--) {
         pte = &table[vpns[level]];
-        if (!entry_is_valid(*pte)) {
+        if (entry_is_valid(*pte)) {
+            uint64_t pa = ((((uint64_t) *pte) >> 10) << 12);
+            table = (pagetable_t) pa;
+        } else {
             void *pa = page_alloc();
             table = (pagetable_t) pa;
             *pte = ((((uint64_t) pa) >> 12) << 10);
             *pte |= PTE_V_MASK;
-        } else {
-            uint64_t pa = ((((uint64_t) pte) >> 10) << 12);
-            table = (pagetable_t) pa;
         }
     }
 
