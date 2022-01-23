@@ -11,12 +11,12 @@ uint8_t read_char();
 int kprintf(const char *fmt, ...);
 int kvprintf(const char *fmt, va_list args);
 
-#define panic(fmt, ...) \
-    do { \
+#define panic(fmt, ...)                                   \
+    do {                                                  \
         kprintf("panic @ (%s:%d): ", __FILE__, __LINE__); \
-        kprintf(fmt, ##__VA_ARGS__); \
-        for (;;) {} \
+        kprintf(fmt, ##__VA_ARGS__);                      \
+        for (;;) {                                        \
+        }                                                 \
     } while (0)
-
 
 #endif

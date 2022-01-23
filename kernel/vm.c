@@ -30,7 +30,7 @@ void kmap(uint64_t vaddr, uint64_t phys_addr, uint64_t perm)
 }
 
 void map_npages(pagetable_t table, uint64_t vstart, uint64_t pstart, uint64_t n_pages,
-               uint64_t perm)
+                uint64_t perm)
 {
     uint64_t vcurr = vstart;
     uint64_t pcurr = pstart;
