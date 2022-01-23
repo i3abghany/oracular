@@ -10,9 +10,11 @@ SECTIONS {
     /* Starts at the address 0x80000000. */
 
     .text : ALIGN(4K) {
+        PROVIDE(_text_start = .);
         *(.init)
         *(.text .text.*)
-        PROVIDE(text_end = .);
+        . = ALIGN(4K);
+        PROVIDE(_text_end = .);
     } >ram
 
     .rodata : ALIGN(4K) {
