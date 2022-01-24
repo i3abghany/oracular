@@ -14,7 +14,7 @@ fi
 
 export PATH="$PATH:$HOME/opt/cross/bin"
 
-cd butils
+cd binutils
 ./build.sh
 
 cd ../gcc
