@@ -3,12 +3,12 @@
 set -eo pipefail
 
 ORACULAR_TOP_LEVEL=$(git rev-parse --show-toplevel)
-ORACULAR_BINUTILS_DIR=$ORACULAR_TOP_LEVEL/toolchain/butils
+ORACULAR_BINUTILS_DIR=$ORACULAR_TOP_LEVEL/toolchain/binutils
 
 EXEC_DIR=$(pwd)
 
 if [ "$EXEC_DIR" != "$ORACULAR_BINUTILS_DIR" ]; then
-    echo 'script must be run from toolchain/butils dir.'
+    echo "script must be run from the $ORACULAR_BINUTILS_DIR dir."
     exit
 fi
 
@@ -45,7 +45,7 @@ cd binutils-build
     --with-sysroot                        \
     --disable-nls                         \
     --disable-werror || echo "Binutils source corrupted. please remove the
-    butils/binutils-src directory and rerun the script.";
+    binutils/binutils-src directory and rerun the script.";
 
 make -j$(nproc)
 make install -j$(nproc)

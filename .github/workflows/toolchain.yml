@@ -16,7 +16,7 @@ jobs:
     - name: build binutils
       run: |
         cd ${{ github.workspace }}
-        cd toolchain/butils
+        cd toolchain/binutils
         ./build.sh
     - name: build gcc
       run: |

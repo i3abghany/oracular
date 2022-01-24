@@ -1,8 +1,8 @@
 toolchain/gcc/gcc-build
 toolchain/gcc/gcc-src
 
-toolchain/butils/binutils-src
-toolchain/butils/binutils-build
+toolchain/binutils/binutils-src
+toolchain/binutils/binutils-build
 
 kernel/*.o
 kernel/*.elf
