@@ -8,7 +8,7 @@ ORACULAR_TOOLCHAIN_DIR=$ORACULAR_TOP_LEVEL/toolchain
 EXEC_DIR=$(pwd)
 
 if [ "$EXEC_DIR" != "$ORACULAR_TOOLCHAIN_DIR" ]; then
-    echo "script must be run from $ORACULAR_TOOLCHAIN_DIR dir."
+    echo "script must be run from the $ORACULAR_TOOLCHAIN_DIR dir."
     exit
 fi
 

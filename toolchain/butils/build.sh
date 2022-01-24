@@ -8,7 +8,7 @@ ORACULAR_BINUTILS_DIR=$ORACULAR_TOP_LEVEL/toolchain/butils
 EXEC_DIR=$(pwd)
 
 if [ "$EXEC_DIR" != "$ORACULAR_BINUTILS_DIR" ]; then
-    echo 'script must be run from toolchain/butils dir.'
+    echo "script must be run from the $ORACULAR_BINUTILS_DIR dir."
     exit
 fi
 

@@ -8,7 +8,7 @@ ORACULAR_GCC_DIR=$ORACULAR_TOP_LEVEL/toolchain/gcc
 EXEC_DIR=$(pwd)
 
 if [ "$EXEC_DIR" != "$ORACULAR_GCC_DIR" ]; then
-    echo 'script must be run from toolchain/gcc dir.'
+    echo "script must be run from the $ORACULAR_GCC_DIR dir."
     exit
 fi
 
