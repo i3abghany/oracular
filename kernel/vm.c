@@ -53,6 +53,7 @@ void kvm_init() { kpagetable = create_kernel_pagetable(); }
 
 void kmap(uint64_t vaddr, uint64_t phys_addr, uint64_t perm)
 {
+    kassert(kpagetable);
     map(kpagetable, vaddr, phys_addr, perm);
 }
 
