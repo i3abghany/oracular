@@ -73,7 +73,6 @@ QEMU_FLAGS += -bios none
 QEMU_FLAGS += -m 128
 QEMU_FLAGS += -serial mon:stdio
 QEMU_FLAGS += -nographic
-QEMU_FLAGS += -device virtio-keyboard-device
 
 KSRC_FILES =
 KSRC_FILES += kernel/console.c
