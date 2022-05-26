@@ -88,6 +88,8 @@ void map_range(pagetable_t table, uint64_t vstart, uint64_t pstart, uint64_t siz
     map_npages(table, vstart, pstart, n_pages, perm);
 }
 
+// TODO: Support coarser-grained pages by stopping at a certain level of
+// translation
 void map(pagetable_t table, uint64_t vaddr, uint64_t phys_addr, uint64_t perm)
 {
     if (vaddr & PAGE_MASK) {
@@ -127,11 +129,13 @@ void map(pagetable_t table, uint64_t vaddr, uint64_t phys_addr, uint64_t perm)
         panic("map: remapping a page");
     }
 
-    *pte = ((phys_addr >> 12) << 10);
+    *pte = (((phys_addr >> 12) & 0x1FF) << 10);
+    *pte |= (((phys_addr >> 21) & 0x1FF) << 19);
+    *pte |= (((phys_addr >> 30) & 0x3FFFFFF) << 28);
     *pte |= perm;
     *pte |= PTE_V_MASK;
 
     if (!entry_is_leaf(*pte)) {
-        panic("map: last-level pte can't be permessionless");
+        panic("map: last-level pte can't be permission-less");
     }
 }
