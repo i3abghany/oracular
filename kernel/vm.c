@@ -28,7 +28,7 @@ static void map_data_section(pagetable_t kernel_table)
     map_range(kernel_table, dstart, dstart, dend - dstart, PTE_R_MASK | PTE_W_MASK);
 }
 
-static pagetable_t kpt_create()
+static pagetable_t create_kernel_pagetable()
 {
     pagetable_t kernel_table = (pagetable_t) page_alloc();
     map_npages(kernel_table, UART0_BASE, UART0_BASE, 1, PTE_W_MASK | PTE_R_MASK);
@@ -49,7 +49,7 @@ static bool entry_is_leaf(pte_t entry)
     return entry & (PTE_R_MASK | PTE_X_MASK | PTE_W_MASK);
 }
 
-void kvm_init() { kpagetable = kpt_create(); }
+void kvm_init() { kpagetable = create_kernel_pagetable(); }
 
 void kmap(uint64_t vaddr, uint64_t phys_addr, uint64_t perm)
 {
