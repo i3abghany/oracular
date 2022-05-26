@@ -90,11 +90,11 @@ void map_range(pagetable_t table, uint64_t vstart, uint64_t pstart, uint64_t siz
 void map(pagetable_t table, uint64_t vaddr, uint64_t phys_addr, uint64_t perm)
 {
     if (vaddr & PAGE_MASK) {
-        panic("unaligned virtual address: 0x%p", vaddr);
+        panic("map: unaligned virtual address: 0x%p", vaddr);
     }
 
     if (phys_addr & PAGE_MASK) {
-        panic("unaligned physical address: 0x%p", phys_addr);
+        panic("map: unaligned physical address: 0x%p", phys_addr);
     }
 
 #ifdef KERNEL_DEBUG
@@ -123,7 +123,7 @@ void map(pagetable_t table, uint64_t vaddr, uint64_t phys_addr, uint64_t perm)
 
     pte = &table[vpns[0]];
     if (entry_is_valid(*pte)) {
-        panic("remapping a page");
+        panic("map: remapping a page");
     }
 
     *pte = ((phys_addr >> 12) << 10);
@@ -131,6 +131,6 @@ void map(pagetable_t table, uint64_t vaddr, uint64_t phys_addr, uint64_t perm)
     *pte |= PTE_V_MASK;
 
     if (!entry_is_leaf(*pte)) {
-        panic("last-level pte can't be permessionless");
+        panic("map: last-level pte can't be permessionless");
     }
 }
