@@ -101,7 +101,7 @@ void map(pagetable_t table, uint64_t vaddr, uint64_t phys_addr, uint64_t perm)
     }
 
 #ifdef KERNEL_DEBUG
-    kprintf("map: vaddr: %p, paddr: %p\n", vaddr, phys_addr);
+    kprintf("map: vaddr: 0x%p, paddr: 0x%p\n", vaddr, phys_addr);
 #endif
 
     uint64_t vpns[3] = {
