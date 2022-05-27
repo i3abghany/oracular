@@ -57,4 +57,14 @@ void kmap(uint64_t vaddr, uint64_t phys_addr, uint64_t perm);
  */
 void kvm_init();
 
+/*
+ * Unmaps and frees all the mapped pages in a three-level nested paging
+ * structure.
+ */
+void unmap_table(pagetable_t table);
+
+/*
+ * Translate a virtual address to its physical counterpart using Sv39 mappings.
+ */
+uint64_t translate_address(pagetable_t table, uint64_t vaddr);
 #endif
