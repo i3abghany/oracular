@@ -55,7 +55,7 @@ void kvm_init()
     kpagetable = create_kernel_pagetable();
     uint64_t table_addr = (uint64_t) kpagetable;
     uint64_t ppn = table_addr >> 12;
-    uint64_t satp_value = (8ULL << 60) | ppn;
+    uint64_t satp_value = (SATP_MODE_SV39 << 60) | ppn;
     set_satp(satp_value);
 }
 

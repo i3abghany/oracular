@@ -22,6 +22,11 @@
 #define PTE_A_MASK (1 << 6) /* accessed */
 #define PTE_D_MASK (1 << 7) /* dirty */
 
+#define SATP_MODE_BARE 0ULL
+#define SATP_MODE_SV39 8ULL
+#define SATP_MODE_SV48 9ULL
+#define SATP_MODE_SV57 10ULL
+
 typedef uint64_t pte_t;
 typedef uint64_t *pagetable_t;
 
@@ -69,4 +74,5 @@ void unmap_table(pagetable_t table);
  * Translate a virtual address to its physical counterpart using Sv39 mappings.
  */
 uint64_t translate_address(pagetable_t table, uint64_t vaddr);
+
 #endif
