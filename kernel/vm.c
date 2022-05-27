@@ -1,5 +1,6 @@
 #include <kernel/kassert.h>
 #include <kernel/kmem.h>
+#include <kernel/rv.h>
 #include <kernel/vm.h>
 
 static pagetable_t kpagetable;
@@ -49,7 +50,16 @@ static bool entry_is_leaf(pte_t entry)
     return entry & (PTE_R_MASK | PTE_X_MASK | PTE_W_MASK);
 }
 
-void kvm_init() { kpagetable = create_kernel_pagetable(); }
+void kvm_init()
+{
+    kpagetable = create_kernel_pagetable();
+    uint64_t table_addr = (uint64_t) kpagetable;
+    uint64_t ppn = table_addr >> 12;
+    uint64_t satp_value = (8ULL << 60) | ppn;
+    set_satp(satp_value);
+}
+
+pagetable_t get_kernel_pagetable() { return kpagetable; }
 
 void kmap(uint64_t vaddr, uint64_t phys_addr, uint64_t perm)
 {

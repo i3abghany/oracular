@@ -56,6 +56,13 @@ uint64_t get_scause()
     return ret;
 }
 
+uint64_t get_satp()
+{
+    uint64_t ret;
+    asm volatile("csrr %0, satp" : "=r"(ret));
+    return ret;
+}
+
 uint64_t get_sstatus()
 {
     uint64_t ret;
