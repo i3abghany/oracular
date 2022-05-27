@@ -139,3 +139,33 @@ void map(pagetable_t table, uint64_t vaddr, uint64_t phys_addr, uint64_t perm)
         panic("map: last-level pte can't be permission-less");
     }
 }
+
+uint64_t translate_address(pagetable_t table, uint64_t vaddr)
+{
+    uint64_t vpns[3] = {
+        (vaddr >> 12) & 0x1FF,
+        (vaddr >> 21) & 0x1FF,
+        (vaddr >> 30) & 0x1FF,
+    };
+
+    pte_t *pte;
+    for (int level = 2; level > 0; level--) {
+        pte = &table[vpns[level]];
+        if (!entry_is_valid(*pte)) {
+            return 0;
+        }
+
+        // FIXME: leaves can be at any level, we currently only consider 4 KiB
+        // pages, i.e. 3 levels of translations.
+
+        uint64_t pa = ((((uint64_t) *pte) >> 10) << 12);
+        table = (pagetable_t) pa;
+    }
+
+    pte = &table[vpns[0]];
+    if (!entry_is_valid(*pte)) {
+        return 0;
+    }
+
+    return (((uint64_t) *pte >> 10) << 12) | (vaddr & 0xFFFF);
+}
