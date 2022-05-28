@@ -1,5 +1,6 @@
 #include <kernel/kassert.h>
 #include <kernel/kmem.h>
+#include <kernel/rv.h>
 #include <kernel/vm.h>
 
 static pagetable_t kpagetable;
@@ -49,7 +50,16 @@ static bool entry_is_leaf(pte_t entry)
     return entry & (PTE_R_MASK | PTE_X_MASK | PTE_W_MASK);
 }
 
-void kvm_init() { kpagetable = create_kernel_pagetable(); }
+void kvm_init()
+{
+    kpagetable = create_kernel_pagetable();
+    uint64_t table_addr = (uint64_t) kpagetable;
+    uint64_t ppn = table_addr >> 12;
+    uint64_t satp_value = (SATP_MODE_SV39 << 60) | ppn;
+    set_satp(satp_value);
+}
+
+pagetable_t get_kernel_pagetable() { return kpagetable; }
 
 void kmap(uint64_t vaddr, uint64_t phys_addr, uint64_t perm)
 {
@@ -140,6 +150,29 @@ void map(pagetable_t table, uint64_t vaddr, uint64_t phys_addr, uint64_t perm)
     }
 }
 
+/*
+ * FIXME: Should not be called with an L1 or L0 table for now.
+ */
+void unmap_table(pagetable_t table)
+{
+    for (int i = 0; i < ENTRIES_PER_PAGE_TABLE; i++) {
+        pte_t l2_entry = table[i];
+        // TODO: Support leafs in level 1. Currently, we assume that leafs are
+        // only in level 0.
+        if (entry_is_valid(l2_entry)) {
+            pagetable_t l1_table = (pagetable_t) ((l2_entry & ~(0x3FF)) << 2);
+            for (int j = 0; j < ENTRIES_PER_PAGE_TABLE; j++) {
+                pte_t l1_entry = l1_table[j];
+                if (entry_is_valid(l1_entry)) {
+                    pagetable_t l0_table = (pagetable_t) ((l1_entry & ~(0x3FF)) << 2);
+                    page_free((void *) l0_table);
+                }
+            }
+            page_free((void *) l1_table);
+        }
+    }
+}
+
 uint64_t translate_address(pagetable_t table, uint64_t vaddr)
 {
     uint64_t vpns[3] = {
@@ -156,7 +189,7 @@ uint64_t translate_address(pagetable_t table, uint64_t vaddr)
         }
 
         // FIXME: leaves can be at any level, we currently only consider 4 KiB
-        // pages, i.e. 3 levels of translations.
+        // pages, i.e. 3 levels of nesting.
 
         uint64_t pa = ((((uint64_t) *pte) >> 10) << 12);
         table = (pagetable_t) pa;

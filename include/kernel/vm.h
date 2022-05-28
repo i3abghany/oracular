@@ -22,6 +22,11 @@
 #define PTE_A_MASK (1 << 6) /* accessed */
 #define PTE_D_MASK (1 << 7) /* dirty */
 
+#define SATP_MODE_BARE 0ULL
+#define SATP_MODE_SV39 8ULL
+#define SATP_MODE_SV48 9ULL
+#define SATP_MODE_SV57 10ULL
+
 typedef uint64_t pte_t;
 typedef uint64_t *pagetable_t;
 
@@ -31,6 +36,8 @@ typedef uint64_t *pagetable_t;
  * @perm.
  */
 void map(pagetable_t table, uint64_t vaddr, uint64_t phys_addr, uint64_t perm);
+
+pagetable_t get_kernel_pagetable();
 
 /*
  * Utility helper to map n consecutive virtual pages to their corresponding n physical
@@ -56,5 +63,16 @@ void kmap(uint64_t vaddr, uint64_t phys_addr, uint64_t perm);
  * Initialize kernel page table using Sv39 mappings.
  */
 void kvm_init();
+
+/*
+ * Unmaps and frees all the mapped pages in a three-level nested paging
+ * structure.
+ */
+void unmap_table(pagetable_t table);
+
+/*
+ * Translate a virtual address to its physical counterpart using Sv39 mappings.
+ */
+uint64_t translate_address(pagetable_t table, uint64_t vaddr);
 
 #endif

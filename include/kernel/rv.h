@@ -14,6 +14,7 @@ uint64_t get_mideleg();
 uint64_t get_mie();
 uint64_t get_mscratch();
 uint64_t get_mstatus();
+uint64_t get_satp();
 uint64_t get_sstatus();
 uint64_t get_scause();
 uint64_t get_sie();
