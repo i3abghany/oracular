@@ -80,6 +80,7 @@ KSRC_FILES += kernel/kmem.c
 KSRC_FILES += kernel/kernel.c
 KSRC_FILES += kernel/prekernel.c
 KSRC_FILES += kernel/rv.c
+KSRC_FILES += kernel/spinlock.c
 KSRC_FILES += kernel/trap.c
 KSRC_FILES += kernel/uart.c
 KSRC_FILES += kernel/vm.c
