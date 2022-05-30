@@ -13,7 +13,7 @@
 
 #define PLIC_UART0_IRQ 10
 
-#define PLIC_IRQ_PRIORITY(irq_) (uint32_t *) (PLIC_PRIORITY + (irq_ * 4))
+#define PLIC_IRQ_PRIORITY(irq_) (uint32_t *) (PLIC_PRIORITY + irq_)
 
 void plic_init();
 void plic_enable_irq(int irq);
