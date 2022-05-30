@@ -1,5 +1,7 @@
 #include <kernel/console.h>
+#include <kernel/plic.h>
 #include <kernel/rv.h>
+#include <kernel/uart.h>
 #include <stdint.h>
 
 extern void trap_vec();
@@ -53,13 +55,20 @@ void ktrap()
 {
     uint64_t scause = get_scause();
 
-    /* Supervisor software interrupts are only triggered by timers. */
-    if (scause & 1 && scause & 0x8000000000000000) {
-        kprintf("timer interrupt\n");
-        /* Acknowledge the interrupt be resetting the pending bit. */
-        set_sip(get_sip() & ~(1 << 1));
+    if (scause & 0x8000000000000000) {
+        if ((scause & 0xFF) == 9) {
+            int c = plic_claim();
+            if (c == PLIC_UART0_IRQ) {
+                uart0_isr();
+            }
+            if (c != 0) plic_acknowledge(c);
+        } else if (scause & 1) {
+            kprintf("timer interrupt\n");
+            /* Acknowledge the interrupt be resetting the pending bit. */
+            set_sip(get_sip() & ~(1 << 1));
+        }
     } else {
-        panic("unknown kernel trap.\nscause: 0x%p, %s\nsepc:   0x%p\nstvec:  0x%p",
-              scause, scause_to_string(scause), get_sepc(), get_stvec());
+        panic("unknown kernel trap.\nscause: 0x%p, %s\nsepc: 0x%p\nstvec: 0x%p", scause,
+              scause_to_string(scause), get_sepc(), get_stvec());
     }
 }

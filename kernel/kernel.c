@@ -6,22 +6,6 @@
 #include <kernel/vm.h>
 #include <stdint.h>
 
-__attribute__((noreturn)) void prompt()
-{
-    while (1) {
-        char c = read_char();
-        if (c == 0x7f) {
-            putchar(8);
-            putchar(' ');
-            putchar(8);
-        } else if (c == 10 || c == 13) {
-            putchar('\n');
-        } else {
-            putchar(c);
-        }
-    }
-}
-
 void kmain(void)
 {
     uart0_init();
@@ -44,5 +28,6 @@ void kmain(void)
 
     plic_init();
 
-    prompt();
+    while (1)
+        ;
 }

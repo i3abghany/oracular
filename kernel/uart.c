@@ -1,4 +1,5 @@
 #include <kernel/common_defs.h>
+#include <kernel/console.h>
 #include <kernel/uart.h>
 
 void uart0_init()
@@ -47,4 +48,18 @@ uint8_t uart0_get()
     while ((mmio_read_byte(UART_LSR) & (1 << 0)) == 0)
         ;
     return mmio_read_byte(UART_RHR);
+}
+
+void uart0_isr()
+{
+    char c = uart0_get();
+    if (c == 0x7f) {
+        putchar(8);
+        putchar(' ');
+        putchar(8);
+    } else if (c == 10 || c == 13) {
+        putchar('\n');
+    } else {
+        putchar(c);
+    }
 }
