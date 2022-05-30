@@ -32,7 +32,6 @@ QEMU = qemu-system-riscv64
 
 CFLAGS =
 CFLAGS += -Wall
-CFLAGS += -O3
 CFLAGS += -march=rv64g
 CFLAGS += -Wextra
 CFLAGS += -Werror
@@ -50,6 +49,8 @@ DEBUG ?=
 
 ifeq ($(DEBUG),ON)
 CFLAGS += -DKERNEL_DEBUG
+else
+CFLAGS += -O3
 endif
 
 ifneq ($(shell $(CC) -dumpspecs 2>/dev/null | grep -e '[^f]no-pie'),)
