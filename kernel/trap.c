@@ -59,7 +59,7 @@ void ktrap()
         /* Acknowledge the interrupt be resetting the pending bit. */
         set_sip(get_sip() & ~(1 << 1));
     } else {
-        panic("unknown kernel trap. (scause: 0x%p, %s)\n", scause,
-              scause_to_string(scause));
+        panic("unknown kernel trap.\nscause: 0x%p, %s\nsepc:   0x%p\nstvec:  0x%p",
+              scause, scause_to_string(scause), get_sepc(), get_stvec());
     }
 }

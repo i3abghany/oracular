@@ -63,10 +63,24 @@ uint64_t get_satp()
     return ret;
 }
 
+uint64_t get_sepc()
+{
+    uint64_t ret;
+    asm volatile("csrr %0, sepc" : "=r"(ret));
+    return ret;
+}
+
 uint64_t get_sstatus()
 {
     uint64_t ret;
     asm volatile("csrr %0, sstatus" : "=r"(ret));
+    return ret;
+}
+
+uint64_t get_stvec()
+{
+    uint64_t ret;
+    asm volatile("csrr %0, stvec" : "=r"(ret));
     return ret;
 }
 
