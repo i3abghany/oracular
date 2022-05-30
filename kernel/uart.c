@@ -6,8 +6,8 @@ void uart0_init()
     /* Mask all UART interrupts. */
     mmio_write_byte(UART_IER, 0x00);
 
-    /* Enable FIFO*/
-    mmio_write_byte(UART_FCR, (1 << 0));
+    /* Enable FIFO */
+    mmio_write_byte(UART_FCR, (3 << 1) | (1 << 0));
 
     /* Enable Baud rate configuration by setting the DLAB bit. */
     mmio_write_byte(UART_LCR, (1 << 7));
