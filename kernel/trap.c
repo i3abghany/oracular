@@ -51,24 +51,38 @@ static const char *scause_to_string(uint64_t scause)
 
 void trap_init() { set_stvec((uint64_t) trap_vec); }
 
+static uint8_t is_interrupt(uint64_t scause)
+{
+    return (scause & 0x8000000000000000) != 0;
+}
+
+#define SUPERVISOR_SOFTWARE_INTERRUPT 1
+#define SUPERVISOR_EXTERNAL_INTERRUPT 9
+
 void ktrap()
 {
     uint64_t scause = get_scause();
+    uint64_t trap_code = scause & 0xFF;
+    if (is_interrupt(scause)) {
+        if (trap_code == SUPERVISOR_EXTERNAL_INTERRUPT) {
+            int irq = plic_claim();
 
-    if (scause & 0x8000000000000000) {
-        if ((scause & 0xFF) == 9) {
-            int c = plic_claim();
-            if (c == PLIC_UART0_IRQ) {
+            if (irq == PLIC_UART0_IRQ) {
                 uart0_isr();
+            } else if (irq != 0) {
+                panic("Unknown PLIC interrupt: %d", irq);
             }
-            if (c != 0) plic_acknowledge(c);
-        } else if (scause & 1) {
+
+            if (irq != 0) {
+                plic_acknowledge(irq);
+            }
+        } else if (trap_code == SUPERVISOR_SOFTWARE_INTERRUPT) {
             kprintf("timer interrupt\n");
             /* Acknowledge the interrupt be resetting the pending bit. */
             set_sip(get_sip() & ~(1 << 1));
         }
     } else {
-        panic("unknown kernel trap.\nscause: 0x%p, %s\nsepc: 0x%p\nstvec: 0x%p", scause,
+        panic("kernel exception\nscause: 0x%p, %s\nsepc: 0x%p\nstvec: 0x%p", scause,
               scause_to_string(scause), get_sepc(), get_stvec());
     }
 }
