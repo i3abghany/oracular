@@ -32,7 +32,6 @@ QEMU = qemu-system-riscv64
 
 CFLAGS =
 CFLAGS += -Wall
-CFLAGS += -O3
 CFLAGS += -march=rv64g
 CFLAGS += -Wextra
 CFLAGS += -Werror
@@ -50,6 +49,8 @@ DEBUG ?=
 
 ifeq ($(DEBUG),ON)
 CFLAGS += -DKERNEL_DEBUG
+else
+CFLAGS += -O3
 endif
 
 ifneq ($(shell $(CC) -dumpspecs 2>/dev/null | grep -e '[^f]no-pie'),)
@@ -78,8 +79,10 @@ KSRC_FILES =
 KSRC_FILES += kernel/console.c
 KSRC_FILES += kernel/kmem.c
 KSRC_FILES += kernel/kernel.c
+KSRC_FILES += kernel/plic.c
 KSRC_FILES += kernel/prekernel.c
 KSRC_FILES += kernel/rv.c
+KSRC_FILES += kernel/spinlock.c
 KSRC_FILES += kernel/trap.c
 KSRC_FILES += kernel/uart.c
 KSRC_FILES += kernel/vm.c

@@ -1,25 +1,10 @@
 #include <kernel/console.h>
 #include <kernel/kassert.h>
 #include <kernel/kmem.h>
+#include <kernel/plic.h>
 #include <kernel/rv.h>
 #include <kernel/vm.h>
 #include <stdint.h>
-
-__attribute__((noreturn)) void prompt()
-{
-    while (1) {
-        char c = read_char();
-        if (c == 0x7f) {
-            putchar(8);
-            putchar(' ');
-            putchar(8);
-        } else if (c == 10 || c == 13) {
-            putchar('\n');
-        } else {
-            putchar(c);
-        }
-    }
-}
 
 void kmain(void)
 {
@@ -41,5 +26,8 @@ void kmain(void)
     set_sstatus(get_sstatus() | (1 << 1));
     kprintf("done\n");
 
-    prompt();
+    plic_init();
+
+    while (1)
+        ;
 }
