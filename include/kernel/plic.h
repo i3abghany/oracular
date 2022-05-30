@@ -7,9 +7,9 @@
 
 #define PLIC_PRIORITY    (uint32_t *) (PLIC_BASE + 0)
 #define PLIC_PENDING     (uint32_t *) (PLIC_BASE + 0x1000)
-#define PLIC_ENABLE      (uint32_t *) (PLIC_BASE + 0x2000)
-#define PLIC_PTHREASHOLD (uint32_t *) (PLIC_BASE + 0x200000)
-#define PLIC_CLAIM       (uint32_t *) (PLIC_BASE + 0x200004)
+#define PLIC_ENABLE      (uint32_t *) (PLIC_BASE + 0x2080)
+#define PLIC_PTHREASHOLD (uint32_t *) (PLIC_BASE + 0x201000)
+#define PLIC_CLAIM       (uint32_t *) (PLIC_BASE + 0x201004)
 
 #define PLIC_UART0_IRQ 10
 
