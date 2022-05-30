@@ -1,5 +1,6 @@
 #include <kernel/kassert.h>
 #include <kernel/kmem.h>
+#include <kernel/plic.h>
 #include <kernel/rv.h>
 #include <kernel/vm.h>
 
@@ -29,10 +30,19 @@ static void map_data_section(pagetable_t kernel_table)
     map_range(kernel_table, dstart, dstart, dend - dstart, PTE_R_MASK | PTE_W_MASK);
 }
 
+static void map_plic_pages(pagetable_t kernel_table)
+{
+    uint64_t plic_start = (uint64_t) PLIC_BASE;
+    uint64_t plic_end = (uint64_t) PLIC_CLAIM;
+    uint64_t n_pages = (plic_end - plic_start + PAGE_SIZE - 1) / PAGE_SIZE;
+    map_npages(kernel_table, PLIC_BASE, PLIC_BASE, n_pages, PTE_W_MASK | PTE_R_MASK);
+}
+
 static pagetable_t create_kernel_pagetable()
 {
     pagetable_t kernel_table = (pagetable_t) page_alloc();
     map_npages(kernel_table, UART0_BASE, UART0_BASE, 1, PTE_W_MASK | PTE_R_MASK);
+    map_plic_pages(kernel_table);
     map_text_section(kernel_table);
     map_data_section(kernel_table);
     return kernel_table;

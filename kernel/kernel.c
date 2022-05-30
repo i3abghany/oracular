@@ -1,6 +1,7 @@
 #include <kernel/console.h>
 #include <kernel/kassert.h>
 #include <kernel/kmem.h>
+#include <kernel/plic.h>
 #include <kernel/rv.h>
 #include <kernel/vm.h>
 #include <stdint.h>
@@ -40,6 +41,8 @@ void kmain(void)
     kprintf("enabling supervisor software interrupts...");
     set_sstatus(get_sstatus() | (1 << 1));
     kprintf("done\n");
+
+    plic_init();
 
     prompt();
 }

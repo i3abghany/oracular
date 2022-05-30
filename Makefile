@@ -79,6 +79,7 @@ KSRC_FILES =
 KSRC_FILES += kernel/console.c
 KSRC_FILES += kernel/kmem.c
 KSRC_FILES += kernel/kernel.c
+KSRC_FILES += kernel/plic.c
 KSRC_FILES += kernel/prekernel.c
 KSRC_FILES += kernel/rv.c
 KSRC_FILES += kernel/spinlock.c
