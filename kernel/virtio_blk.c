@@ -68,6 +68,8 @@ void virtio_blk_init()
         panic("virtio_blk_init: Device did not accept driver-ACK'd features.");
     }
 
+    /* TODO: initialize virtqueues. */
+
     status |= VIRTIO_STATUS_DRIVER_OK;
     VIRTIO_WRITE(VIRTIO_MMIO_STATUS, status);
 
