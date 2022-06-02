@@ -36,4 +36,6 @@ struct virtio_blk_req {
     uint8_t status;
 } __attribute__((packed));
 
+void virtio_blk_init();
+
 #endif
