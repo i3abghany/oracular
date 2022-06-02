@@ -83,5 +83,4 @@ void virtio_blk_init()
         config_gen_after = VIRTIO_READ(VIRTIO_MMIO_CONFIG_GEN);
     } while (config_gen_before != config_gen_after);
     kprintf("capacity: 0x%p\n", capacity);
-    kassert(0);
 }
