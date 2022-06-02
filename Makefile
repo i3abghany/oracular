@@ -88,6 +88,7 @@ KSRC_FILES += kernel/rv.c
 KSRC_FILES += kernel/spinlock.c
 KSRC_FILES += kernel/trap.c
 KSRC_FILES += kernel/uart.c
+KSRC_FILES += kernel/virtio_blk.c
 KSRC_FILES += kernel/vm.c
 
 KASM_FILES =

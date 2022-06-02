@@ -3,6 +3,7 @@
 #include <kernel/kmem.h>
 #include <kernel/plic.h>
 #include <kernel/rv.h>
+#include <kernel/virtio.h>
 #include <kernel/vm.h>
 #include <stdint.h>
 
@@ -27,6 +28,9 @@ void kmain(void)
     kprintf("done\n");
 
     plic_init();
+
+    void virtio_blk_init(void);
+    virtio_blk_init();
 
     while (1)
         ;
