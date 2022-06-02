@@ -74,6 +74,9 @@ QEMU_FLAGS += -bios none
 QEMU_FLAGS += -m 128
 QEMU_FLAGS += -serial mon:stdio
 QEMU_FLAGS += -nographic
+QEMU_FLAGS += -global virtio-mmio.force-legacy=false
+QEMU_FLAGS += -drive format=raw,id=x0,file=a.img
+QEMU_FLAGS += -device virtio-blk-device,drive=x0,bus=virtio-mmio-bus.0
 
 KSRC_FILES =
 KSRC_FILES += kernel/console.c
