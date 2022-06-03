@@ -84,8 +84,10 @@ KSRC_FILES += kernel/console.c
 KSRC_FILES += kernel/kmem.c
 KSRC_FILES += kernel/kernel.c
 KSRC_FILES += kernel/plic.c
+KSRC_FILES += kernel/list.c
 KSRC_FILES += kernel/prekernel.c
 KSRC_FILES += kernel/rv.c
+KSRC_FILES += kernel/slab_alloc.c
 KSRC_FILES += kernel/spinlock.c
 KSRC_FILES += kernel/trap.c
 KSRC_FILES += kernel/uart.c
@@ -97,7 +99,12 @@ KASM_FILES += kernel/entry.S
 KASM_FILES += kernel/kvec.S
 KASM_FILES += kernel/tvec.S
 
+TEST_FILES =
+TEST_FILES = test/kernel/slab_alloc_test.c
+
+
 KOBJ_FILES = $(patsubst %.c, %.o, $(KSRC_FILES))
+KOBJ_FILES += $(patsubst %.c, %.o, $(TEST_FILES))
 KOBJ_FILES += $(patsubst %.S, %.o, $(KASM_FILES))
 
 qemu: kernel/kernel.elf
@@ -122,4 +129,4 @@ kernel/kernel.elf: $(KOBJ_FILES)
 
 .PHONY: clean
 clean:
-	rm -f kernel/*.o kernel/*.elf kernel/*.d
+	rm -f kernel/*.o kernel/*.elf kernel/*.d test/kernel/*.o

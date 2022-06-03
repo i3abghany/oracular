@@ -33,6 +33,9 @@ void kmain(void)
 
     virtio_blk_init();
 
+    void test1();
+    test1();
+
     while (1)
         ;
 }
