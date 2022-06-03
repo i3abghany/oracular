@@ -1,8 +1,10 @@
 #include <kernel/console.h>
 #include <kernel/kassert.h>
 #include <kernel/kmem.h>
+#include <kernel/list.h>
 #include <kernel/plic.h>
 #include <kernel/rv.h>
+#include <kernel/slab_alloc.h>
 #include <kernel/virtio_blk.h>
 #include <kernel/vm.h>
 #include <stdint.h>
