@@ -44,6 +44,7 @@ CFLAGS += -fno-builtin
 CFLAGS += -mno-relax
 CFLAGS += -fno-common
 CFLAGS += -Iinclude
+CFLAGS += -DORACULAR_KERNEL
 
 DEBUG ?=
 
