@@ -43,3 +43,9 @@ void *slab_alloc(struct slab_t *slab)
     panic("slab_alloc: no free place in the slab pool.");
     return 0;
 }
+
+void slab_free(struct slab_t *slab, void *obj)
+{
+    slab->free++;
+    intrusive_list_prepend(&slab->empty_slabs, (struct intrusive_list *)obj);
+}

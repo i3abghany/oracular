@@ -17,4 +17,7 @@ struct slab_t {
 struct slab_t *slab_init(const char *name, size_t obj_size);
 
 void *slab_alloc(struct slab_t *slab);
+
+void slab_free(struct slab_t *slab, void *obj);
+
 #endif
