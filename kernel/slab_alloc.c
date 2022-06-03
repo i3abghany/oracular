@@ -47,5 +47,5 @@ void *slab_alloc(struct slab_t *slab)
 void slab_free(struct slab_t *slab, void *obj)
 {
     slab->free++;
-    intrusive_list_prepend(&slab->empty_slabs, (struct intrusive_list *)obj);
+    intrusive_list_prepend(&slab->empty_slabs, (struct intrusive_list *) obj);
 }
