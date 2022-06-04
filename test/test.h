@@ -10,6 +10,7 @@
 #endif
 
 #define ASSERT_EQUAL(a, b) ASSERT((a) == (b))
+#define ASSERT_NULL(a) ASSERT((a) == 0)
 #define ASSERT_NOT_NULL(a) ASSERT((a) != 0)
 
 #endif

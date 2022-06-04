@@ -8,7 +8,7 @@ struct slab_t *slab_init(const char *name, size_t obj_size)
     if (obj_size < sizeof(struct intrusive_list)) {
         kprintf(
             "slab_init: Slab allocation of objects of size less than a list pointer is "
-            "not allowed.");
+            "not allowed.\n");
         return NULL;
     }
     struct slab_t *ret = (struct slab_t *) page_alloc();

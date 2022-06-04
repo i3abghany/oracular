@@ -47,6 +47,12 @@ void test2()
     ASSERT_EQUAL(sss4, sss5);
 }
 
+void test3()
+{
+    struct slab_t *s1_slab = slab_init("s1", sizeof(struct intrusive_list) - 1);
+    ASSERT_NULL(s1_slab);
+}
+
 void slab_alloc_tests()
 {
     test1();
@@ -54,4 +60,7 @@ void slab_alloc_tests()
 
     test2();
     kprintf("slab_alloc_tests: test2 [pass]\n");
+
+    test3();
+    kprintf("slab_alloc_tests: test3 [pass]\n");
 }
