@@ -5,6 +5,7 @@
 #include "../test.h"
 
 struct s1 {
+    // struct intrusive_list list_head;
     int i;
     char j;
     struct s1 *ptr1;

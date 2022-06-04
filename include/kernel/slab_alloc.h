@@ -8,7 +8,7 @@ static struct intrusive_list slabs_list = {&slabs_list, &slabs_list};
 
 struct slab_t {
     size_t obj_size;
-    uint64_t nobj;
+    uint64_t n_objects;
     uint64_t free;
     const char *name;
     struct intrusive_list empty_slabs;
