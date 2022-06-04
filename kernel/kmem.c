@@ -1,7 +1,6 @@
 #include <kernel/console.h>
 #include <kernel/kmem.h>
 #include <lib/string.h>
-
 #include <stddef.h>
 #include <stdint.h>
 
