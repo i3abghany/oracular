@@ -1,6 +1,7 @@
 #ifndef _KERNEL_VIRTIO_BLK_H
 #define _KERNEL_VIRTIO_BLK_H
 
+#include "kmem.h"
 #include "virtio.h"
 
 #define VIRTIO_BLK_DEVICE_ID 2
@@ -35,6 +36,56 @@ struct virtio_blk_req {
     uint8_t data[512];
     uint8_t status;
 } __attribute__((packed));
+
+#define QUEUE_SIZE 16
+
+struct virtq_desc {
+    uint64_t addr; /* Physical guest memory address */
+    uint32_t len;
+/* This marks a buffer as continuing via the next field. */
+#define VIRTQ_DESC_F_NEXT 1
+/* This marks a buffer as device write-only (otherwise device read-only). */
+#define VIRTQ_DESC_F_WRITE 2
+/* This means the buffer contains a list of buffer descriptors. */
+#define VIRTQ_DESC_F_INDIRECT 4
+    /* The flags as indicated above. */
+    uint16_t flags;
+    /* Next field if flags & NEXT */
+    uint16_t next;
+} __attribute__((packed));
+
+struct virtq_avail {
+#define VIRTQ_AVAIL_F_NO_INTERRUPT 1
+    uint16_t flags;
+    uint16_t idx;
+    uint16_t ring[QUEUE_SIZE];
+} __attribute__((packed));
+
+struct virtq_used_elem {
+    /* Index of start of used descriptor chain. */
+    uint32_t id;
+    /* Total length of the descriptor chain which was used (written to) */
+    uint32_t len;
+};
+
+struct virtq_used {
+#define VIRTQ_USED_F_NO_NOTIFY 1
+    uint16_t flags;
+    uint16_t idx;
+    struct virtq_used_elem ring[QUEUE_SIZE];
+} __attribute__((packed));
+
+struct virtq_t {
+    uint8_t mem[2 * PAGE_SIZE];  // Other fields are situated here.
+    struct virtq_desc *descriptors;
+    struct virtq_avail *avail;
+    struct virtq_used *used;
+} __attribute__((packed)) __attribute__((aligned(PAGE_SIZE)));
+
+struct virtio_blk {
+    struct virtq_t virtq;
+    uint8_t free_desc[QUEUE_SIZE];
+};
 
 void virtio_blk_init();
 
