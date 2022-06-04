@@ -33,8 +33,10 @@ void kmain(void)
 
     virtio_blk_init();
 
+#ifdef KERNEL_TEST
     void slab_alloc_tests();
     slab_alloc_tests();
+#endif
 
     while (1)
         ;
