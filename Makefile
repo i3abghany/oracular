@@ -44,6 +44,7 @@ CFLAGS += -fno-builtin
 CFLAGS += -mno-relax
 CFLAGS += -fno-common
 CFLAGS += -Iinclude
+CFLAGS += -DORACULAR_KERNEL
 
 DEBUG ?=
 
@@ -74,17 +75,23 @@ QEMU_FLAGS += -bios none
 QEMU_FLAGS += -m 128
 QEMU_FLAGS += -serial mon:stdio
 QEMU_FLAGS += -nographic
+QEMU_FLAGS += -global virtio-mmio.force-legacy=false
+QEMU_FLAGS += -drive format=raw,id=x0,file=a.img
+QEMU_FLAGS += -device virtio-blk-device,drive=x0,bus=virtio-mmio-bus.0
 
 KSRC_FILES =
 KSRC_FILES += kernel/console.c
 KSRC_FILES += kernel/kmem.c
 KSRC_FILES += kernel/kernel.c
 KSRC_FILES += kernel/plic.c
+KSRC_FILES += kernel/list.c
 KSRC_FILES += kernel/prekernel.c
 KSRC_FILES += kernel/rv.c
+KSRC_FILES += kernel/slab_alloc.c
 KSRC_FILES += kernel/spinlock.c
 KSRC_FILES += kernel/trap.c
 KSRC_FILES += kernel/uart.c
+KSRC_FILES += kernel/virtio_blk.c
 KSRC_FILES += kernel/vm.c
 
 KASM_FILES =
@@ -92,7 +99,15 @@ KASM_FILES += kernel/entry.S
 KASM_FILES += kernel/kvec.S
 KASM_FILES += kernel/tvec.S
 
+TEST_FILES =
+TEST_FILES += test/kernel/slab_alloc_test.c
+
+LIB_FILES =
+LIB_FILES += lib/string.c
+
 KOBJ_FILES = $(patsubst %.c, %.o, $(KSRC_FILES))
+KOBJ_FILES += $(patsubst %.c, %.o, $(TEST_FILES))
+KOBJ_FILES += $(patsubst %.c, %.o, $(LIB_FILES))
 KOBJ_FILES += $(patsubst %.S, %.o, $(KASM_FILES))
 
 qemu: kernel/kernel.elf
@@ -105,8 +120,10 @@ gdb: QEMU_FLAGS += -no-shutdown
 gdb: kernel/kernel.elf
 	$(QEMU) -kernel $< $(QEMU_FLAGS)
 
+test: CFLAGS += -DKERNEL_TEST
+test: qemu
+
 kernel/kernel.elf: $(KOBJ_FILES)
-	echo $(KOBJ_FILES)
 	$(LD) $(LDFLAGS) $(KOBJ_FILES) -o $@
 
 %.o: %.c
@@ -115,6 +132,6 @@ kernel/kernel.elf: $(KOBJ_FILES)
 %.o: %.S
 	$(AS) -g $< -o $@
 
-.PHONY: clean
+.PHONY: clean test
 clean:
-	rm -f kernel/*.o kernel/*.elf kernel/*.d
+	rm -f kernel/*.o kernel/*.elf kernel/*.d test/kernel/*.o

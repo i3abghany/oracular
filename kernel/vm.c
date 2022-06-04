@@ -2,6 +2,7 @@
 #include <kernel/kmem.h>
 #include <kernel/plic.h>
 #include <kernel/rv.h>
+#include <kernel/virtio.h>
 #include <kernel/vm.h>
 
 static pagetable_t kpagetable;
@@ -38,11 +39,17 @@ static void map_plic_pages(pagetable_t kernel_table)
     map_npages(kernel_table, PLIC_BASE, PLIC_BASE, n_pages, PTE_W_MASK | PTE_R_MASK);
 }
 
+static void map_virtio(pagetable_t kernel_table)
+{
+    map_npages(kernel_table, VIRTIO_BASE, VIRTIO_BASE, 1, PTE_W_MASK | PTE_R_MASK);
+}
+
 static pagetable_t create_kernel_pagetable()
 {
     pagetable_t kernel_table = (pagetable_t) page_alloc();
     map_npages(kernel_table, UART0_BASE, UART0_BASE, 1, PTE_W_MASK | PTE_R_MASK);
     map_plic_pages(kernel_table);
+    map_virtio(kernel_table);
     map_text_section(kernel_table);
     map_data_section(kernel_table);
     return kernel_table;
