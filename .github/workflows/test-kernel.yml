@@ -22,8 +22,9 @@ jobs:
         cd $HOME/opt/cross
         wget https://github.com/riscv-collab/riscv-gnu-toolchain/releases/download/2021.09.21/riscv64-elf-ubuntu-20.04-nightly-2021.09.21-nightly.tar.gz
         tar -xvf riscv64-elf-ubuntu-20.04-nightly-2021.09.21-nightly.tar.gz
-    - name: build the kernel image
+    - name: build and test the kernel image
       run: |
         cd ${{ github.workspace }}
         export PATH="$PATH:$HOME/opt/cross/riscv/bin"
+        touch a.img
         make test
