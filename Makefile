@@ -100,11 +100,14 @@ KASM_FILES += kernel/kvec.S
 KASM_FILES += kernel/tvec.S
 
 TEST_FILES =
-TEST_FILES = test/kernel/slab_alloc_test.c
+TEST_FILES += test/kernel/slab_alloc_test.c
 
+LIB_FILES =
+LIB_FILES += lib/string.c
 
 KOBJ_FILES = $(patsubst %.c, %.o, $(KSRC_FILES))
 KOBJ_FILES += $(patsubst %.c, %.o, $(TEST_FILES))
+KOBJ_FILES += $(patsubst %.c, %.o, $(LIB_FILES))
 KOBJ_FILES += $(patsubst %.S, %.o, $(KASM_FILES))
 
 qemu: kernel/kernel.elf
