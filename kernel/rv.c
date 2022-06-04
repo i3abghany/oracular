@@ -120,3 +120,18 @@ void set_pmpaddr0(uint64_t value) { asm volatile("csrw pmpaddr0, %0" : : "r"(val
 void set_pmpcfg0(uint64_t value) { asm volatile("csrw pmpcfg0, %0" : : "r"(value)); }
 void set_satp(uint64_t value) { asm volatile("csrw satp, %0" : : "r"(value)); }
 void set_scause(uint64_t value) { asm volatile("csrw scause, %0" : : "r"(value)); }
+
+void qemu_virt_shutdown(enum shutdown_code code)
+{
+    switch (code) {
+        case FAIL:
+            *VIRT_MMIO_SHUTDOWN = VIRT_MMIO_FINISHER_FAIL;
+            break;
+        case PASS:
+            *VIRT_MMIO_SHUTDOWN = VIRT_MMIO_FINISHER_PASS;
+            break;
+        default:
+            while (1)
+                ;
+    }
+}
