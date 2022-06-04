@@ -4,6 +4,8 @@
 
 #include "../test.h"
 
+TEST_MODULE("test_slab_alloc");
+
 struct s1 {
     // struct intrusive_list list_head;
     int i;
@@ -13,7 +15,7 @@ struct s1 {
     uint64_t a, b, c, d;
 };
 
-void test1()
+void test_n_allocations()
 {
     struct slab_t *s1_slab = slab_init("s1", sizeof(struct s1));
     uint64_t available_size = PAGE_SIZE - sizeof(struct slab_t);
@@ -26,9 +28,10 @@ void test1()
             (uint64_t) s1_slab + PAGE_SIZE - sizeof(struct s1) * i + diff;
         ASSERT_EQUAL(expected_addr, (uint64_t) sss);
     }
+    PASS();
 }
 
-void test2()
+void test_slab_free()
 {
     struct slab_t *s1_slab = slab_init("s1", sizeof(struct s1));
     struct s1 *sss1 = slab_alloc(s1_slab);
@@ -45,22 +48,19 @@ void test2()
 
     ASSERT_EQUAL(sss3, sss6);
     ASSERT_EQUAL(sss4, sss5);
+    PASS();
 }
 
-void test3()
+void test_less_than_list_size()
 {
     struct slab_t *s1_slab = slab_init("s1", sizeof(struct intrusive_list) - 1);
     ASSERT_NULL(s1_slab);
+    PASS();
 }
 
 void slab_alloc_tests()
 {
-    test1();
-    kprintf("slab_alloc_tests: test1 [pass]\n");
-
-    test2();
-    kprintf("slab_alloc_tests: test2 [pass]\n");
-
-    test3();
-    kprintf("slab_alloc_tests: test3 [pass]\n");
+    test_n_allocations();
+    test_slab_free();
+    test_less_than_list_size();
 }
