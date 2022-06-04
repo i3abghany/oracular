@@ -124,7 +124,6 @@ test: CFLAGS += -DKERNEL_TEST
 test: qemu
 
 kernel/kernel.elf: $(KOBJ_FILES)
-	echo $(KOBJ_FILES)
 	$(LD) $(LDFLAGS) $(KOBJ_FILES) -o $@
 
 %.o: %.c
