@@ -36,6 +36,7 @@ void kmain(void)
 #ifdef KERNEL_TEST
     void slab_alloc_tests();
     slab_alloc_tests();
+    qemu_virt_shutdown(PASS);
 #endif
 
     while (1)

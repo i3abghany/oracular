@@ -1,5 +1,5 @@
-#ifndef __KERNEL_RV_H
-#define __KERNEL_RV_H
+#ifndef _KERNEL_RV_H
+#define _KERNEL_RV_H
 
 #include <stdint.h>
 
@@ -40,6 +40,12 @@
 #define CLINT_MTIMECMP ((uint64_t *) (CLINT_BASE + 0x4000))
 #define CLINT_MTIME    ((uint64_t *) (CLINT_BASE + 0xBFF8))
 
+#define VIRT_MMIO_BASE     0x100000
+#define VIRT_MMIO_SHUTDOWN ((uint16_t *) (VIRT_MMIO_BASE + 0))
+
+#define VIRT_MMIO_FINISHER_FAIL 0x3333
+#define VIRT_MMIO_FINISHER_PASS 0x5555
+
 uint64_t get_medeleg();
 uint64_t get_mepc();
 uint64_t get_mhartid();
@@ -70,5 +76,9 @@ void set_pmpaddr0(uint64_t value);
 void set_pmpcfg0(uint64_t value);
 void set_satp(uint64_t value);
 void set_sstatus();
+
+enum shutdown_code { PASS, FAIL };
+
+void qemu_virt_shutdown(enum shutdown_code code);
 
 #endif

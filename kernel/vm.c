@@ -31,6 +31,13 @@ static void map_data_section(pagetable_t kernel_table)
     map_range(kernel_table, dstart, dstart, dend - dstart, PTE_R_MASK | PTE_W_MASK);
 }
 
+static void map_sifive_mmio(pagetable_t kernel_table)
+{
+    const uint64_t sifive_mmio_addr = 0x100000;
+    map_npages(kernel_table, sifive_mmio_addr, sifive_mmio_addr, 1,
+               PTE_W_MASK | PTE_R_MASK);
+}
+
 static void map_plic_pages(pagetable_t kernel_table)
 {
     uint64_t plic_start = (uint64_t) PLIC_BASE;
@@ -52,6 +59,7 @@ static pagetable_t create_kernel_pagetable()
     map_virtio(kernel_table);
     map_text_section(kernel_table);
     map_data_section(kernel_table);
+    map_sifive_mmio(kernel_table);
     return kernel_table;
 }
 
