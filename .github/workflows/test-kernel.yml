@@ -1,0 +1,29 @@
+name: Build and test the kernel image
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: install
+      run: |
+        sudo apt install make git curl libmpfr-dev libmpc-dev libgmp-dev qemu-system-misc
+    - name: download the binaries
+      run: |
+        mkdir -p $HOME/opt/cross
+        cd $HOME/opt/cross
+        wget https://github.com/riscv-collab/riscv-gnu-toolchain/releases/download/2021.09.21/riscv64-elf-ubuntu-20.04-nightly-2021.09.21-nightly.tar.gz
+        tar -xvf riscv64-elf-ubuntu-20.04-nightly-2021.09.21-nightly.tar.gz
+    - name: build the kernel image
+      run: |
+        cd ${{ github.workspace }}
+        export PATH="$PATH:$HOME/opt/cross/riscv/bin"
+        make test
