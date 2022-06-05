@@ -11,5 +11,3 @@ test/kernel/*.o
 lib/*.o
 
 .vscode/*
-
-*.img

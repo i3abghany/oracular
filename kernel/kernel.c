@@ -9,6 +9,8 @@
 #include <kernel/vm.h>
 #include <stdint.h>
 
+uint8_t iiimem[512];
+
 void kmain(void)
 {
     uart0_init();
@@ -32,6 +34,8 @@ void kmain(void)
     plic_init();
 
     virtio_blk_init();
+
+    virtio_blk_request(VIRTIO_BLK_T_IN, 0, iiimem);
 
 #ifdef KERNEL_TEST
     void slab_alloc_tests();

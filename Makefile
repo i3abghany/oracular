@@ -133,6 +133,9 @@ kernel/kernel.elf: $(KOBJ_FILES)
 %.o: %.S
 	$(AS) -g $< -o $@
 
-.PHONY: clean test
+format:
+	python3 scripts/format_files.py
+
+.PHONY: clean test format
 clean:
 	rm -f kernel/*.o kernel/*.elf kernel/*.d test/kernel/*.o lib/*.o

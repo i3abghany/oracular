@@ -11,7 +11,8 @@
 #define PLIC_PTHREASHOLD (uint32_t *) (PLIC_BASE + 0x201000)
 #define PLIC_CLAIM       (uint32_t *) (PLIC_BASE + 0x201004)
 
-#define PLIC_UART0_IRQ 10
+#define PLIC_UART0_IRQ  10
+#define PLIC_VIRTIO_IRQ 1
 
 #define PLIC_IRQ_PRIORITY(irq_) (uint32_t *) (PLIC_PRIORITY + irq_)
 

@@ -1,10 +1,21 @@
 #include <kernel/console.h>
+#include <kernel/kassert.h>
 #include <kernel/plic.h>
 #include <kernel/rv.h>
+#include <kernel/trap.h>
 #include <kernel/uart.h>
-#include <stdint.h>
+#include <kernel/virtio_blk.h>
+#include <lib/stddef.h>
 
 extern void trap_vec();
+
+static isr_t isrs[N_IRQS];
+
+void register_isr(uint32_t irq, isr_t isr)
+{
+    kassert(irq < N_IRQS);
+    isrs[irq] = isr;
+}
 
 /*
  * Values taken from the RISC-V Privileged ISA Spec (sec. 4.1.9)
@@ -66,11 +77,12 @@ void ktrap()
     if (is_interrupt(scause)) {
         if (trap_code == SUPERVISOR_EXTERNAL_INTERRUPT) {
             int irq = plic_claim();
+            kassert(irq < N_IRQS);
 
-            if (irq == PLIC_UART0_IRQ) {
-                uart0_isr();
-            } else if (irq != 0) {
-                panic("Unknown PLIC interrupt: %d", irq);
+            if (isrs[irq] == NULL) {
+                panic("ktrap: Unknown PLIC interrupt: %d", irq);
+            } else {
+                isrs[irq]();
             }
 
             if (irq != 0) {
