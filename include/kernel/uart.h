@@ -19,6 +19,5 @@
 void uart0_init();
 void uart0_put(uint8_t c);
 uint8_t uart0_get();
-void uart0_isr();
 
 #endif

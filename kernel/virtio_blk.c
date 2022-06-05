@@ -1,10 +1,22 @@
 #include <kernel/console.h>
 #include <kernel/kassert.h>
+#include <kernel/plic.h>
 #include <kernel/slab_alloc.h>
+#include <kernel/trap.h>
 #include <kernel/virtio_blk.h>
+#include <lib/stddef.h>
 #include <lib/string.h>
-#include <stddef.h>
-#include <string.h>
+
+extern uint8_t iiimem[];
+
+void virtio_blk_isr()
+{
+    kprintf("in virtio_blk_isr\n");
+    kprintf("disc block 0: 0x%p 0x%p 0x%p 0x%p\n", iiimem[0], iiimem[1], iiimem[2],
+            iiimem[3]);
+
+    VIRTIO_WRITE(VIRTIO_MMIO_INTERRUPT_ACK, VIRTIO_READ(VIRTIO_MMIO_INTERRUPT_STATUS));
+}
 
 static struct virtio_blk blk_device;
 static struct slab_t *virtio_blk_req_slab;
@@ -155,6 +167,8 @@ void virtio_blk_init()
         config_gen_after = VIRTIO_READ(VIRTIO_MMIO_CONFIG_GEN);
     } while (config_gen_before != config_gen_after);
     kprintf("Capacity: 0x%p\n", capacity);
+
+    register_isr(PLIC_VIRTIO_IRQ, virtio_blk_isr);
 }
 
 static uint16_t get_free_desc()

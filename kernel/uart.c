@@ -1,6 +1,22 @@
 #include <kernel/common_defs.h>
 #include <kernel/console.h>
+#include <kernel/plic.h>
+#include <kernel/trap.h>
 #include <kernel/uart.h>
+
+static void uart0_isr()
+{
+    char c = uart0_get();
+    if (c == 0x7f) {
+        putchar(8);
+        putchar(' ');
+        putchar(8);
+    } else if (c == 10 || c == 13) {
+        putchar('\n');
+    } else {
+        putchar(c);
+    }
+}
 
 void uart0_init()
 {
@@ -34,6 +50,8 @@ void uart0_init()
 
     /* Enable receive interrupts */
     mmio_write_byte(UART_IER, (1 << 0));
+
+    register_isr(PLIC_UART0_IRQ, uart0_isr);
 }
 
 void uart0_put(uint8_t c)
@@ -48,18 +66,4 @@ uint8_t uart0_get()
     while ((mmio_read_byte(UART_LSR) & (1 << 0)) == 0)
         ;
     return mmio_read_byte(UART_RHR);
-}
-
-void uart0_isr()
-{
-    char c = uart0_get();
-    if (c == 0x7f) {
-        putchar(8);
-        putchar(' ');
-        putchar(8);
-    } else if (c == 10 || c == 13) {
-        putchar('\n');
-    } else {
-        putchar(c);
-    }
 }

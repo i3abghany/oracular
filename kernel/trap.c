@@ -1,21 +1,20 @@
 #include <kernel/console.h>
+#include <kernel/kassert.h>
 #include <kernel/plic.h>
 #include <kernel/rv.h>
+#include <kernel/trap.h>
 #include <kernel/uart.h>
 #include <kernel/virtio_blk.h>
-#include <stdint.h>
+#include <lib/stddef.h>
 
 extern void trap_vec();
 
-extern uint8_t iiimem[];
+static isr_t isrs[N_IRQS];
 
-void virtio_blk_isr()
+void register_isr(uint32_t irq, isr_t isr)
 {
-    kprintf("in virtio_blk_isr\n");
-    kprintf("disc block 0: 0x%p 0x%p 0x%p 0x%p\n", iiimem[0], iiimem[1], iiimem[2],
-            iiimem[3]);
-
-    VIRTIO_WRITE(VIRTIO_MMIO_INTERRUPT_ACK, VIRTIO_READ(VIRTIO_MMIO_INTERRUPT_STATUS));
+    kassert(irq < N_IRQS);
+    isrs[irq] = isr;
 }
 
 /*
@@ -78,12 +77,12 @@ void ktrap()
     if (is_interrupt(scause)) {
         if (trap_code == SUPERVISOR_EXTERNAL_INTERRUPT) {
             int irq = plic_claim();
-            if (irq == PLIC_UART0_IRQ) {
-                uart0_isr();
-            } else if (irq == PLIC_VIRTIO_IRQ) {
-                virtio_blk_isr();
-            } else if (irq != 0) {
-                panic("Unknown PLIC interrupt: %d", irq);
+            kassert(irq < N_IRQS);
+
+            if (isrs[irq] == NULL) {
+                panic("ktrap: Unknown PLIC interrupt: %d", irq);
+            } else {
+                isrs[irq]();
             }
 
             if (irq != 0) {
