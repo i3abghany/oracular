@@ -35,14 +35,14 @@ void kmain(void)
 
     virtio_blk_init();
 
+    void virtio_blk_request(uint32_t req_type, uint32_t sector, uint8_t * data);
+    virtio_blk_request(VIRTIO_BLK_T_IN, 0, iiimem);
+
 #ifdef KERNEL_TEST
     void slab_alloc_tests();
     slab_alloc_tests();
     qemu_virt_shutdown(PASS);
 #endif
-
-    void virtio_blk_request(uint32_t req_type, uint32_t sector, uint8_t * data);
-    virtio_blk_request(VIRTIO_BLK_T_IN, 0, iiimem);
 
     while (1)
         ;
