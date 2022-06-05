@@ -7,7 +7,6 @@
 TEST_MODULE("test_slab_alloc");
 
 struct s1 {
-    // struct intrusive_list list_head;
     int i;
     char j;
     struct s1 *ptr1;
@@ -58,9 +57,25 @@ void test_less_than_list_size()
     PASS();
 }
 
+void test_add_mem()
+{
+    /*
+     * We should be only capable of allocating 1 object (size of the slab in the
+     * first N bytes of the page)
+     */
+    struct slab_t *s = slab_init("test_slab", PAGE_SIZE / 2);
+
+    void *p1 = slab_alloc(s);
+    ASSERT_NOT_NULL(p1);
+    void *p2 = slab_alloc(s);
+    ASSERT_NOT_NULL(p2);
+    PASS();
+}
+
 void slab_alloc_tests()
 {
     test_n_allocations();
     test_slab_free();
     test_less_than_list_size();
+    test_add_mem();
 }
