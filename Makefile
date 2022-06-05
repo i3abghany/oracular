@@ -121,6 +121,7 @@ gdb: kernel/kernel.elf
 	$(QEMU) -kernel $< $(QEMU_FLAGS)
 
 test: CFLAGS += -DKERNEL_TEST
+test: QEMU_FLAGS += -no-reboot
 test: qemu
 
 kernel/kernel.elf: $(KOBJ_FILES)
@@ -134,4 +135,4 @@ kernel/kernel.elf: $(KOBJ_FILES)
 
 .PHONY: clean test
 clean:
-	rm -f kernel/*.o kernel/*.elf kernel/*.d test/kernel/*.o
+	rm -f kernel/*.o kernel/*.elf kernel/*.d test/kernel/*.o lib/*.o
