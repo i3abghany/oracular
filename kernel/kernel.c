@@ -9,6 +9,8 @@
 #include <kernel/vm.h>
 #include <stdint.h>
 
+uint8_t iiimem[512];
+
 void kmain(void)
 {
     uart0_init();
@@ -38,6 +40,9 @@ void kmain(void)
     slab_alloc_tests();
     qemu_virt_shutdown(PASS);
 #endif
+
+    void virtio_blk_request(uint32_t req_type, uint32_t sector, uint8_t * data);
+    virtio_blk_request(VIRTIO_BLK_T_IN, 0, iiimem);
 
     while (1)
         ;

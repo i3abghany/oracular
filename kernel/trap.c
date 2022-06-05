@@ -12,7 +12,8 @@ extern uint8_t iiimem[];
 void virtio_blk_isr()
 {
     kprintf("in virtio_blk_isr\n");
-    kprintf("desc block 0: 0x%p 0x%p 0x%p 0x%p\n", iiimem[0], iiimem[1], iiimem[2], iiimem[3]);
+    kprintf("desc block 0: 0x%p 0x%p 0x%p 0x%p\n", iiimem[0], iiimem[1], iiimem[2],
+            iiimem[3]);
 
     VIRTIO_WRITE(VIRTIO_MMIO_INTERRUPT_ACK, VIRTIO_READ(VIRTIO_MMIO_INTERRUPT_STATUS));
 }
