@@ -29,12 +29,11 @@
 #define VIRTIO_BLK_F_WRITE_ZEROES (1 << 14)
 
 struct virtio_blk_req {
+#define VIRTIO_BLK_T_IN  0
+#define VIRTIO_BLK_T_OUT 1
     uint32_t type;
     uint32_t reserved_;
     uint64_t sector;
-    /* As per the reference, we don't need the *data* field as it's used for
-     * discard and write zeros commands, which we don't use (for now) */
-    uint8_t data[512];
     uint8_t status;
 } __attribute__((packed));
 
@@ -54,6 +53,10 @@ struct virtq_desc {
     /* Next field if flags & NEXT */
     uint16_t next;
 } __attribute__((packed));
+
+#define VIRTIO_BLK_REQ_HEADER_SIZE 16
+#define VIRTIO_BLK_REQ_SECTOR_SIZE 512
+#define VIRTIO_BLK_REQ_STATUS_SIZE 1
 
 struct virtq_avail {
 #define VIRTQ_AVAIL_F_NO_INTERRUPT 1
@@ -85,7 +88,8 @@ struct virtq_t {
 
 struct virtio_blk {
     struct virtq_t virtq;
-    uint8_t free_desc[QUEUE_SIZE];
+    bool free_desc[QUEUE_SIZE];
+    bool is_init;
 };
 
 void virtio_blk_init();

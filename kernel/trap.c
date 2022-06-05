@@ -2,9 +2,20 @@
 #include <kernel/plic.h>
 #include <kernel/rv.h>
 #include <kernel/uart.h>
+#include <kernel/virtio_blk.h>
 #include <stdint.h>
 
 extern void trap_vec();
+
+extern uint8_t iiimem[];
+
+void virtio_blk_isr()
+{
+    kprintf("in virtio_blk_isr\n");
+    kprintf("desc block 0: 0x%p 0x%p 0x%p 0x%p\n", iiimem[0], iiimem[1], iiimem[2], iiimem[3]);
+
+    VIRTIO_WRITE(VIRTIO_MMIO_INTERRUPT_ACK, VIRTIO_READ(VIRTIO_MMIO_INTERRUPT_STATUS));
+}
 
 /*
  * Values taken from the RISC-V Privileged ISA Spec (sec. 4.1.9)
@@ -66,9 +77,10 @@ void ktrap()
     if (is_interrupt(scause)) {
         if (trap_code == SUPERVISOR_EXTERNAL_INTERRUPT) {
             int irq = plic_claim();
-
             if (irq == PLIC_UART0_IRQ) {
                 uart0_isr();
+            } else if (irq == PLIC_VIRTIO_IRQ) {
+                virtio_blk_isr();
             } else if (irq != 0) {
                 panic("Unknown PLIC interrupt: %d", irq);
             }
