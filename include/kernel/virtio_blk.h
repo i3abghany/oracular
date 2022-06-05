@@ -1,12 +1,13 @@
 #ifndef _KERNEL_VIRTIO_BLK_H
 #define _KERNEL_VIRTIO_BLK_H
 
+#include "../lib/stdbool.h"
 #include "kmem.h"
 #include "virtio.h"
 
 #define VIRTIO_BLK_DEVICE_ID 2
 
-#define VIRTIO_BLK_CFG(offs, type) ((type) VIRTIO_READ((offs)))
+#define VIRTIO_BLK_CFG(offs, type) ((type) VIRTIO_READ((VIRTIO_MMIO_CONFIG + offs)))
 
 #define VIRTIO_BLK_CFG_CAPACITY   VIRTIO_BLK_CFG(0, uint64_t)
 #define VIRTIO_BLK_CFG_SIZE_MAX   VIRTIO_BLK_CFG(8, uint32_t)
