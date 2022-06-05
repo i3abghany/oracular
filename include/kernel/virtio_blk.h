@@ -93,5 +93,6 @@ struct virtio_blk {
 };
 
 void virtio_blk_init();
+void virtio_blk_request(uint32_t req_type, uint32_t sector, uint8_t *data);
 
 #endif

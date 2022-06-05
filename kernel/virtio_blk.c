@@ -34,6 +34,8 @@ static void virtq_init()
     VIRTIO_WRITE(VIRTIO_MMIO_QUEUE_DRIVER_HIGH, HIGH32(virtq->avail));
     VIRTIO_WRITE(VIRTIO_MMIO_QUEUE_DEVICE_LOW, LOW32(virtq->used));
     VIRTIO_WRITE(VIRTIO_MMIO_QUEUE_DEVICE_HIGH, HIGH32(virtq->used));
+
+    VIRTIO_WRITE(VIRTIO_MMIO_QUEUE_READY, 1);
 }
 
 static void dev_init()
@@ -225,7 +227,5 @@ void virtio_blk_request(uint32_t req_type, uint32_t sector, uint8_t *data)
     i = 0;
     while (i < 10000) i++;
 
-    VIRTIO_WRITE(VIRTIO_MMIO_QUEUE_READY, 1);
-    kprintf("ready: %d\n", VIRTIO_READ(VIRTIO_MMIO_QUEUE_READY));
     VIRTIO_WRITE(VIRTIO_MMIO_QUEUE_NOTIFY, 0);
 }
