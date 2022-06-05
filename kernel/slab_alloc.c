@@ -1,7 +1,7 @@
 #include <kernel/console.h>
 #include <kernel/kmem.h>
 #include <kernel/slab_alloc.h>
-#include <stddef.h>
+#include <lib/stddef.h>
 
 struct slab_t *slab_init(const char *name, size_t obj_size)
 {
