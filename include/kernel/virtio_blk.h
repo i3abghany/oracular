@@ -89,9 +89,15 @@ struct virtq_t {
 struct virtio_blk {
     struct virtq_t virtq;
     bool free_desc[QUEUE_SIZE];
+    uint16_t last_seen_used;
     bool is_init;
+    volatile bool is_currently_serving;
 };
 
+/* Free a descriptor and return its next, if there is one. Otherwise return
+ * QUEUE_SIZE */
+uint16_t desc_free(uint16_t);
+void desc_chain_free(uint16_t);
 void virtio_blk_init();
 void virtio_blk_request(uint32_t req_type, uint32_t sector, uint8_t *data);
 
