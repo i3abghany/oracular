@@ -18,20 +18,19 @@ sudo apt install make git curl qemu-system-misc libmpfr-dev libmpc-dev libgmp-de
 ### Clone the project
 
 ```console
-git clone https://github.com/i3abghany/oracular.git
-cd oracular
+git clone https://github.com/i3abghany/oracular.git && cd oracular
 ```
 
 ### Build Binutils and GCC
 
 Download, build, and install GCC cross compiler for RISCV64. This is automated
 using the script `toolchain/build.sh` (which must be executed from the
-`toolchain` directory). After the process is done, GCC and Binutils will be
+`toolchain` directory). The toolchain may be easily installed using the make
+target `toolchain`. After the process is done, GCC and Binutils will be
 installed in the directory `$HOME/opt/cross/bin`.
 
 ```console
-cd toolchain
-./build.sh
+make toolchain
 ```
 
 ### Compile the kernel

@@ -136,6 +136,11 @@ kernel/kernel.elf: $(KOBJ_FILES)
 format:
 	python3 scripts/format_files.py
 
-.PHONY: clean test format
+toolchain:
+	cd toolchain
+	./build.sh
+	cd ..
+
+.PHONY: clean test format toolchain
 clean:
 	rm -f kernel/*.o kernel/*.elf kernel/*.d test/kernel/*.o lib/*.o
