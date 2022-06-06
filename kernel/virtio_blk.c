@@ -7,19 +7,39 @@
 #include <lib/stddef.h>
 #include <lib/string.h>
 
-extern uint8_t iiimem[];
+static struct virtio_blk blk_device;
+static struct slab_t *virtio_blk_req_slab;
 
 void virtio_blk_isr()
 {
-    kprintf("in virtio_blk_isr\n");
-    kprintf("disc block 0: 0x%p 0x%p 0x%p 0x%p\n", iiimem[0], iiimem[1], iiimem[2],
-            iiimem[3]);
+    uint32_t intr_status = VIRTIO_READ(VIRTIO_MMIO_INTERRUPT_STATUS);
+    VIRTIO_WRITE(VIRTIO_MMIO_INTERRUPT_ACK, intr_status);
 
-    VIRTIO_WRITE(VIRTIO_MMIO_INTERRUPT_ACK, VIRTIO_READ(VIRTIO_MMIO_INTERRUPT_STATUS));
+    while (blk_device.last_seen_used != blk_device.virtq.used->idx) {
+        __sync_synchronize();
+        struct virtq_used_elem elem =
+            blk_device.virtq.used->ring[blk_device.last_seen_used % QUEUE_SIZE];
+        uint16_t desc = elem.id;
+        uint16_t chain_head = desc;
+        struct virtio_blk_req *req =
+            (struct virtio_blk_req *) blk_device.virtq.descriptors[desc].addr;
+        if (req->status != 0) {
+            panic("virtio_blk_isr: Request failed. status: 0x%p", req->status);
+        }
+        kassert((blk_device.virtq.descriptors[desc].flags & VIRTQ_DESC_F_NEXT) != 0);
+
+        desc = blk_device.virtq.descriptors[desc].next;
+        kassert((blk_device.virtq.descriptors[desc].flags & VIRTQ_DESC_F_NEXT) != 0);
+
+        desc = blk_device.virtq.descriptors[desc].next;
+
+        blk_device.last_seen_used++;
+        desc_chain_free(chain_head);
+        slab_free(virtio_blk_req_slab, (void *) req);
+    }
+
+    blk_device.is_currently_serving = false;
 }
-
-static struct virtio_blk blk_device;
-static struct slab_t *virtio_blk_req_slab;
 
 static void virtq_init()
 {
@@ -40,6 +60,10 @@ static void virtq_init()
 #define LOW32(x)  (uint32_t)((uint64_t) x & 0xFFFFFFFF)
 #define HIGH32(x) (uint32_t)(((uint64_t) x >> 32) & 0xFFFFFFFF)
 
+    /* 6. Write physical addresses of the queue’s Descriptor Area, Driver Area and Device
+     * Area to (respectively) the QueueDescLow/QueueDescHigh,
+     * QueueDriverLow/QueueDriverHigh and QueueDeviceLow/QueueDeviceHigh register pairs */
+
     VIRTIO_WRITE(VIRTIO_MMIO_QUEUE_DESC_LOW, LOW32(virtq->descriptors));
     VIRTIO_WRITE(VIRTIO_MMIO_QUEUE_DESC_HIGH, HIGH32(virtq->descriptors));
     VIRTIO_WRITE(VIRTIO_MMIO_QUEUE_DRIVER_LOW, LOW32(virtq->avail));
@@ -47,7 +71,26 @@ static void virtq_init()
     VIRTIO_WRITE(VIRTIO_MMIO_QUEUE_DEVICE_LOW, LOW32(virtq->used));
     VIRTIO_WRITE(VIRTIO_MMIO_QUEUE_DEVICE_HIGH, HIGH32(virtq->used));
 
+    /* 7. Write 0x1 to QueueReady. */
     VIRTIO_WRITE(VIRTIO_MMIO_QUEUE_READY, 1);
+}
+
+uint16_t desc_free(uint16_t desc)
+{
+    kassert(desc <= QUEUE_SIZE);
+    uint16_t next = QUEUE_SIZE;
+    if ((blk_device.virtq.descriptors[desc].flags & VIRTQ_DESC_F_NEXT) != 0)
+        next = blk_device.virtq.descriptors[desc].next;
+    blk_device.free_desc[desc] = true;
+    memset(&blk_device.virtq.descriptors[desc], 0, sizeof(struct virtq_desc));
+    return next;
+}
+
+void desc_chain_free(uint16_t desc_head)
+{
+    uint16_t next = QUEUE_SIZE;
+    while ((next = desc_free(desc_head)) != QUEUE_SIZE) desc_head = next;
+    desc_free(desc_head);
 }
 
 static void dev_init()
@@ -122,7 +165,12 @@ void virtio_blk_init()
      * device
      */
     VIRTIO_WRITE(VIRTIO_MMIO_DRIVER_FEATURES_SEL, 0);
-    VIRTIO_WRITE(VIRTIO_MMIO_DRIVER_FEATURES, device_features);
+
+    uint32_t driver_features = device_features;
+    driver_features &= ~VIRTIO_F_ANY_LAYOUT;
+    driver_features &= ~VIRTIO_F_INDIRECT_DESC;
+    driver_features &= ~VIRTIO_F_EVENT_IDX;
+    VIRTIO_WRITE(VIRTIO_MMIO_DRIVER_FEATURES, driver_features);
 
     /* Set the FEATURES_OK status bit */
     status |= VIRTIO_STATUS_FEATURES_OK;
@@ -135,26 +183,43 @@ void virtio_blk_init()
      */
     uint32_t final_status = VIRTIO_READ(VIRTIO_MMIO_STATUS);
     if ((final_status & VIRTIO_STATUS_FEATURES_OK) == 0) {
-        panic("virtio_blk_init: Device did not accept driver-ACK'd features.");
+        panic("virtio_blk_init: Device did not accept driver-ACK'd features");
     }
 
     status |= VIRTIO_STATUS_DRIVER_OK;
     VIRTIO_WRITE(VIRTIO_MMIO_STATUS, status);
 
+    /*                         Virtqueue initialization                      */
+
+    /* 1. Select the queue writing its index (first queue is 0) to QueueSel. */
     VIRTIO_WRITE(VIRTIO_MMIO_QUEUE_SEL, 0);
+
+    /*2. Check if the queue is not already in use: read QueueReady, and expect a returned
+     * value of zero (0x0).*/
+    uint32_t queue_ready = VIRTIO_READ(VIRTIO_MMIO_QUEUE_READY);
+    if (queue_ready != 0) {
+        panic("virtio_blk_init: Couldn't select queue #0");
+    }
+
+    /* 3. Read maximum queue size (number of elements) from QueueNumMax. If the returned
+     * value is zero */
     uint32_t queue_num_max = VIRTIO_READ(VIRTIO_MMIO_QUEUE_NUM_MAX);
     kprintf("QueueNumMax: 0x%p\n", queue_num_max);
 
     if (queue_num_max == 0) {
-        panic("virtio_blk_init: Couldn't select queue #0");
+        panic("virtio_blk_init: Virtqueue #0 is not available");
     }
 
     if (queue_num_max < QUEUE_SIZE) {
         panic("virtio_blk_init: More descriptors available than supported by the device");
     }
 
-    VIRTIO_WRITE(VIRTIO_MMIO_QUEUE_NUM, QUEUE_SIZE);
+    /* 4. Allocate and zero the queue memory, making sure the memory is physically
+     * contiguous. (virtq_init) */
     dev_init();
+
+    /* 5. Notify the device about the queue size by writing the size to QueueNum. */
+    VIRTIO_WRITE(VIRTIO_MMIO_QUEUE_NUM, QUEUE_SIZE);
     virtio_blk_slab_init();
 
     kprintf("virtio_blk_init: Device configuration parameters: \n");
@@ -200,6 +265,7 @@ void virtio_blk_request(uint32_t req_type, uint32_t sector, uint8_t *data)
     }
 
     struct virtio_blk_req *h = slab_alloc(virtio_blk_req_slab);
+    memset(h, 0, sizeof(struct virtio_blk_req));
     h->type = req_type;
     h->sector = sector;
 
@@ -230,16 +296,16 @@ void virtio_blk_request(uint32_t req_type, uint32_t sector, uint8_t *data)
     blk_device.virtq.descriptors[header_desc].next = data_desc;
     blk_device.virtq.descriptors[data_desc].next = status_desc;
 
-    uint16_t next_idx = blk_device.virtq.avail->idx;
+    uint16_t next_idx = blk_device.virtq.avail->idx % QUEUE_SIZE;
     blk_device.virtq.avail->ring[next_idx] = header_desc;
-
-    int i = 0;
-    while (i < 10000) i++;
+    __sync_synchronize();
 
     blk_device.virtq.avail->idx++;
+    __sync_synchronize();
 
-    i = 0;
-    while (i < 10000) i++;
-
+    blk_device.is_currently_serving = true;
     VIRTIO_WRITE(VIRTIO_MMIO_QUEUE_NOTIFY, 0);
+
+    while (blk_device.is_currently_serving)
+        ;
 }

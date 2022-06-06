@@ -27,6 +27,9 @@
 #define VIRTIO_BLK_F_CONFIG_WCE   (1 << 11)
 #define VIRTIO_BLK_F_DISCARD      (1 << 13)
 #define VIRTIO_BLK_F_WRITE_ZEROES (1 << 14)
+#define VIRTIO_F_ANY_LAYOUT       (1 << 27)
+#define VIRTIO_F_INDIRECT_DESC    (1 << 28)
+#define VIRTIO_F_EVENT_IDX        (1 << 29)
 
 struct virtio_blk_req {
 #define VIRTIO_BLK_T_IN  0
@@ -89,9 +92,15 @@ struct virtq_t {
 struct virtio_blk {
     struct virtq_t virtq;
     bool free_desc[QUEUE_SIZE];
+    uint16_t last_seen_used;
     bool is_init;
+    volatile bool is_currently_serving;
 };
 
+/* Free a descriptor and return its next, if there is one. Otherwise return
+ * QUEUE_SIZE */
+uint16_t desc_free(uint16_t);
+void desc_chain_free(uint16_t);
 void virtio_blk_init();
 void virtio_blk_request(uint32_t req_type, uint32_t sector, uint8_t *data);
 
