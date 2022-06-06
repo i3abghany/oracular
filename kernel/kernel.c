@@ -35,8 +35,8 @@ void kmain(void)
 
     virtio_blk_init();
 
-    virtio_blk_request(VIRTIO_BLK_T_IN, 0, iiimem);
-    virtio_blk_request(VIRTIO_BLK_T_OUT, 1, iiimem);
+    virtio_blk_request(VIRTIO_BLK_T_IN, 1, iiimem);
+    virtio_blk_request(VIRTIO_BLK_T_OUT, 2, iiimem);
 
 #ifdef KERNEL_TEST
     void slab_alloc_tests();

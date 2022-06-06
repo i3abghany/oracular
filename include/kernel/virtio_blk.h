@@ -27,6 +27,9 @@
 #define VIRTIO_BLK_F_CONFIG_WCE   (1 << 11)
 #define VIRTIO_BLK_F_DISCARD      (1 << 13)
 #define VIRTIO_BLK_F_WRITE_ZEROES (1 << 14)
+#define VIRTIO_F_ANY_LAYOUT       (1 << 27)
+#define VIRTIO_F_INDIRECT_DESC    (1 << 28)
+#define VIRTIO_F_EVENT_IDX        (1 << 29)
 
 struct virtio_blk_req {
 #define VIRTIO_BLK_T_IN  0

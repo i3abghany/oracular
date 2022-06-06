@@ -165,7 +165,12 @@ void virtio_blk_init()
      * device
      */
     VIRTIO_WRITE(VIRTIO_MMIO_DRIVER_FEATURES_SEL, 0);
-    VIRTIO_WRITE(VIRTIO_MMIO_DRIVER_FEATURES, (device_features & ~(1 << 29)));
+
+    uint32_t driver_features = device_features;
+    driver_features &= ~VIRTIO_F_ANY_LAYOUT;
+    driver_features &= ~VIRTIO_F_INDIRECT_DESC;
+    driver_features &= ~VIRTIO_F_EVENT_IDX;
+    VIRTIO_WRITE(VIRTIO_MMIO_DRIVER_FEATURES, driver_features);
 
     /* Set the FEATURES_OK status bit */
     status |= VIRTIO_STATUS_FEATURES_OK;
