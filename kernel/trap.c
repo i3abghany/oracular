@@ -62,7 +62,7 @@ static const char *scause_to_string(uint64_t scause)
 
 void trap_init() { set_stvec((uint64_t) trap_vec); }
 
-static uint8_t is_interrupt(uint64_t scause)
+static inline uint8_t is_interrupt(uint64_t scause)
 {
     return (scause & 0x8000000000000000) != 0;
 }
