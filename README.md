@@ -1,7 +1,7 @@
 # OracularOS
 
-Oracular is a minimal UNIX-like operating system for the RISC-V ISA. The goal is
-to learn about operating systems development and employ prominent systems
+Oracular is a minimal UNIX-like operating system for RISC-V platforms. The goal
+is to learn about operating systems development and employ prominent systems
 literature in a real-world project.
 
 ## Build instructions
@@ -12,7 +12,7 @@ based on it.
 ### Install prerequisites
 
 ```console
-sudo apt install make git curl qemu-system-misc libmpfr-dev libmpc-dev libgmp-dev gdb-multiarch
+sudo apt install make git curl qemu-system-misc libmpfr-dev libmpc-dev libgmp-dev gdb-multiarch clang-format python
 ```
 
 ### Clone the project
@@ -26,7 +26,7 @@ cd oracular
 
 Download, build, and install GCC cross compiler for RISCV64. This is automated
 using the script `toolchain/build.sh` (which must be executed from the
-`toolchain` directory). After the process is done, GCC and binutils will be
+`toolchain` directory). After the process is done, GCC and Binutils will be
 installed in the directory `$HOME/opt/cross/bin`.
 
 ```console
@@ -36,7 +36,7 @@ cd toolchain
 
 ### Compile the kernel
 
-By using the top-level Makefile, we can compile the kernel and load it into
+By using the top-level Makefile, you can compile the kernel and load it into
 QEMU.
 
 ```console
@@ -47,14 +47,15 @@ make qemu
 
 The Makefile has a target that builds the kernel, loads it into QEMU with
 debugging options and then hangs waiting for GDB to connect. First, invoke the
-following command.
+`gdb` Makefile target (It's also advised to turn on the `DEBUG` switch to turn off
+-O3, which makes debugging using GDB dreadful.)
 
 ```console
-make gdb
+make gdb DEBUG=ON
 ```
 
 And then invoke `gdb-multiarch` in the repository top-level directory in another
-terminal.
+terminal session.
 
 Note that loading `.gdbinit` automatically will initially fail. You'll have to
 add the following line to `${HOME}/.gdbinit`.
@@ -63,4 +64,4 @@ add the following line to `${HOME}/.gdbinit`.
 add-auto-load-safe-path /PATH/TO/ORACULAR/.gdbinit
 ```
 
-And you'll have to substitute the path with the appropriate oracular location.
+And substitute the path with the appropriate oracular repository location.
