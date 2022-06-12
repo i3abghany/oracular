@@ -39,15 +39,15 @@ CFLAGS += -pedantic
 CFLAGS += -mcmodel=medany
 CFLAGS += -ffreestanding
 CFLAGS += -c
-CFLAGS += -gdwarf-2
 CFLAGS += -fno-builtin
 CFLAGS += -mno-relax
 CFLAGS += -fno-common
 CFLAGS += -Iinclude
 CFLAGS += -DORACULAR_KERNEL
 
-DEBUG ?=
+ASFLAGS =
 
+DEBUG ?=
 ifeq ($(DEBUG),ON)
 CFLAGS += -DKERNEL_DEBUG
 else
@@ -117,6 +117,8 @@ gdb: QEMU_FLAGS += -s -S
 gdb: QEMU_FLAGS += -d int
 gdb: QEMU_FLAGS += -no-reboot
 gdb: QEMU_FLAGS += -no-shutdown
+gdb: CFLAGS += -gdwarf-2
+gdb: ASFLAGS += -gdwarf-2
 gdb: kernel/kernel.elf
 	$(QEMU) -kernel $< $(QEMU_FLAGS)
 
@@ -131,7 +133,7 @@ kernel/kernel.elf: $(KOBJ_FILES)
 	$(CC) $(CFLAGS) $< -o $@
 
 %.o: %.S
-	$(AS) -g $< -o $@
+	$(AS) $(ASFLAGS) -g $< -o $@
 
 format:
 	python3 scripts/format_files.py
@@ -144,3 +146,5 @@ toolchain:
 .PHONY: clean test format toolchain
 clean:
 	rm -f kernel/*.o kernel/*.elf kernel/*.d test/kernel/*.o lib/*.o
+
+FORCE:
