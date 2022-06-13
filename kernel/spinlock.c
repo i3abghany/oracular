@@ -7,7 +7,7 @@ void spinlock_init(struct spinlock_t *s, const char *name)
     s->name = name;
 }
 
-void acquire(struct spinlock_t *s)
+void spinlock_acquire(struct spinlock_t *s)
 {
     if (s->acquired) {
         panic("acquire: Attempting to acquire an already-acquired lock. (%s)", s->name);
@@ -17,7 +17,7 @@ void acquire(struct spinlock_t *s)
         ;
 }
 
-void release(struct spinlock_t *s)
+void spinlock_release(struct spinlock_t *s)
 {
     if (!s->acquired) {
         panic("release: attempting to release a lock that isn't acquired. (%s)", s->name);

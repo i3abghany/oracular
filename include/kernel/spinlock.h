@@ -9,7 +9,7 @@ struct spinlock_t {
 };
 
 void spinlock_init(struct spinlock_t *s, const char *name);
-void acquire(struct spinlock_t *s);
-void release(struct spinlock_t *s);
+void spinlock_acquire(struct spinlock_t *s);
+void spinlock_release(struct spinlock_t *s);
 
 #endif
