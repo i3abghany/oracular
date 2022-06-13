@@ -9,8 +9,17 @@ void plic_init()
     *PLIC_PTHREASHOLD = 0;
 }
 
-void plic_enable_irq(int irq) { *PLIC_ENABLE |= (1 << irq); }
+void plic_enable_irq(int irq)
+{
+    *PLIC_ENABLE |= (1 << irq);
+}
 
-int plic_claim() { return *PLIC_CLAIM; }
+int plic_claim()
+{
+    return *PLIC_CLAIM;
+}
 
-void plic_acknowledge(int irq) { *PLIC_CLAIM = irq; }
+void plic_acknowledge(int irq)
+{
+    *PLIC_CLAIM = irq;
+}

@@ -7,3 +7,4 @@ SpaceAfterCStyleCast: true
 SpaceBeforeAssignmentOperators: true
 ColumnLimit: 90
 BreakBeforeBraces: Linux
+AllowShortFunctionsOnASingleLine: None

@@ -61,7 +61,10 @@ static pagetable_t create_kernel_pagetable()
     return kernel_table;
 }
 
-static bool entry_is_valid(pte_t entry) { return entry & PTE_V_MASK; }
+static bool entry_is_valid(pte_t entry)
+{
+    return entry & PTE_V_MASK;
+}
 
 /*
  * The permission bits, R, W, and X, indicate whether the page is readable, writable, and
@@ -82,7 +85,10 @@ void kvm_init()
     set_satp(satp_value);
 }
 
-pagetable_t get_kernel_pagetable() { return kpagetable; }
+pagetable_t get_kernel_pagetable()
+{
+    return kpagetable;
+}
 
 void kmap(uint64_t vaddr, uint64_t phys_addr, uint64_t perm)
 {

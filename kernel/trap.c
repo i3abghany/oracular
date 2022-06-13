@@ -60,7 +60,10 @@ static const char *scause_to_string(uint64_t scause)
     }
 }
 
-void trap_init() { set_stvec((uint64_t) trap_vec); }
+void trap_init()
+{
+    set_stvec((uint64_t) trap_vec);
+}
 
 static inline uint8_t is_interrupt(uint64_t scause)
 {
