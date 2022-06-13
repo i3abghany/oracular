@@ -9,6 +9,10 @@ if __name__ == '__main__':
     argv += files
     argv.append('-i')
     print(argv)
-    subprocess.run(argv)
+    try:
+        subprocess.run(argv)
+    except FileNotFoundError:
+        print('Error: Could not find and execute clang-format.')
+        print('Make sure it\'s intalled and aliased to versionless \'clang-format\'')
 
 
