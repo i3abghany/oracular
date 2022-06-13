@@ -106,9 +106,9 @@ LIB_FILES =
 LIB_FILES += lib/string.c
 
 KOBJ_FILES = $(patsubst %.c, %.o, $(KSRC_FILES))
+KOBJ_FILES += $(patsubst %.S, %.o, $(KASM_FILES))
 KOBJ_FILES += $(patsubst %.c, %.o, $(TEST_FILES))
 KOBJ_FILES += $(patsubst %.c, %.o, $(LIB_FILES))
-KOBJ_FILES += $(patsubst %.S, %.o, $(KASM_FILES))
 
 qemu: kernel/kernel.elf
 	$(QEMU) $(QEMU_FLAGS) -kernel $<
@@ -122,6 +122,7 @@ gdb: ASFLAGS += -gdwarf-2
 gdb: kernel/kernel.elf
 	$(QEMU) -kernel $< $(QEMU_FLAGS)
 
+# TODO: Only compile and link test files if `test` is the target.
 test: CFLAGS += -DKERNEL_TEST
 test: QEMU_FLAGS += -no-reboot
 test: qemu
