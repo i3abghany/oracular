@@ -33,9 +33,7 @@ static void map_data_section(pagetable_t kernel_table)
 
 static void map_sifive_mmio(pagetable_t kernel_table)
 {
-    const uint64_t sifive_mmio_addr = 0x100000;
-    map_npages(kernel_table, sifive_mmio_addr, sifive_mmio_addr, 1,
-               PTE_W_MASK | PTE_R_MASK);
+    map_npages(kernel_table, VIRT_MMIO_BASE, VIRT_MMIO_BASE, 1, PTE_W_MASK | PTE_R_MASK);
 }
 
 static void map_plic_pages(pagetable_t kernel_table)
