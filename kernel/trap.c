@@ -24,39 +24,39 @@ static const char *scause_to_string(uint64_t scause)
 {
     switch (scause) {
         case 0x8000000000000001:
-            return "supervisor software interrupt";
+            return "Supervisor software interrupt";
         case 0x8000000000000005:
-            return "supervisor timer interrupt";
+            return "Supervisor timer interrupt";
         case 0x8000000000000009:
-            return "supervisor external interrupt";
+            return "Supervisor external interrupt";
         case 0x0:
-            return "instruction address misaligned";
+            return "Instruction address misaligned";
         case 0x1:
-            return "instruction access fault";
+            return "Instruction access fault";
         case 0x2:
-            return "illegal instruction";
+            return "Illegal instruction";
         case 0x3:
-            return "breakpoint";
+            return "Breakpoint";
         case 0x4:
-            return "load address misaligned";
+            return "Load address misaligned";
         case 0x5:
-            return "load access fault";
+            return "Load access fault";
         case 0x6:
-            return "store/AMO address misaligned";
+            return "Store/AMO address misaligned";
         case 0x7:
-            return "store/AMO access fault";
+            return "Store/AMO access fault";
         case 0x8:
-            return "environment call from U-mode";
+            return "Environment call from U-mode";
         case 0x9:
-            return "environment call from S-mode";
+            return "Environment call from S-mode";
         case 0xc:
-            return "instruction page fault";
+            return "Instruction page fault";
         case 0xd:
-            return "load page fault";
+            return "Load page fault";
         case 0xf:
-            return "store/AMO page fault";
+            return "Store/AMO page fault";
         default:
-            return "invalid";
+            return "Invalid";
     }
 }
 
@@ -94,7 +94,7 @@ void ktrap()
             set_sip(get_sip() & ~(1 << 1));
         }
     } else {
-        panic("kernel exception\nscause: 0x%p, %s\nsepc: 0x%p\nstvec: 0x%p", scause,
-              scause_to_string(scause), get_sepc(), get_stvec());
+        panic("ktrap: Kernel exception\nscause: 0x%p, %s\nsepc: 0x%p\nstvec: 0x%p",
+	      scause, scause_to_string(scause), get_sepc(), get_stvec());
     }
 }
