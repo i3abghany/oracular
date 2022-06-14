@@ -5,6 +5,7 @@
 #include <kernel/trap.h>
 #include <kernel/uart.h>
 #include <kernel/virtio_blk.h>
+#include <lib/stdbool.h>
 #include <lib/stddef.h>
 
 extern void trap_vec();
@@ -65,7 +66,7 @@ void trap_init()
     set_stvec((uint64_t) trap_vec);
 }
 
-static inline uint8_t is_interrupt(uint64_t scause)
+static inline bool is_interrupt(uint64_t scause)
 {
     return (scause & 0x8000000000000000) != 0;
 }
