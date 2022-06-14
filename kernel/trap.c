@@ -96,6 +96,6 @@ void ktrap()
         }
     } else {
         panic("ktrap: Kernel exception\nscause: 0x%p, %s\nsepc: 0x%p\nstvec: 0x%p",
-	      scause, scause_to_string(scause), get_sepc(), get_stvec());
+              scause, scause_to_string(scause), get_sepc(), get_stvec());
     }
 }
