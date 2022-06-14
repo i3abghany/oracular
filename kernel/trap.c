@@ -70,9 +70,6 @@ static inline uint8_t is_interrupt(uint64_t scause)
     return (scause & 0x8000000000000000) != 0;
 }
 
-#define SUPERVISOR_SOFTWARE_INTERRUPT 1
-#define SUPERVISOR_EXTERNAL_INTERRUPT 9
-
 void ktrap()
 {
     uint64_t scause = get_scause();
