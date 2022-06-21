@@ -127,7 +127,7 @@ test: CFLAGS += -DKERNEL_TEST
 test: QEMU_FLAGS += -no-reboot
 test: qemu
 
-kernel/kernel.elf: $(KOBJ_FILES)
+kernel/kernel.elf: $(KOBJ_FILES) a.img
 	$(LD) $(LDFLAGS) $(KOBJ_FILES) -o $@
 
 %.o: %.c
@@ -135,6 +135,10 @@ kernel/kernel.elf: $(KOBJ_FILES)
 
 %.o: %.S
 	$(AS) $(ASFLAGS) -g $< -o $@
+
+a.img:
+	dd if=/dev/zero of=a.img count=10 bs=512
+
 
 format:
 	python3 scripts/format_files.py
@@ -146,6 +150,5 @@ toolchain:
 
 .PHONY: clean test format toolchain
 clean:
-	rm -f kernel/*.o kernel/*.elf kernel/*.d test/kernel/*.o lib/*.o
+	rm -f kernel/*.o kernel/*.elf kernel/*.d test/kernel/*.o lib/*.o *.img
 
-FORCE:
