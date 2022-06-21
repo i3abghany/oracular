@@ -1,5 +1,5 @@
-#include <kernel/common_defs.h>
 #include <kernel/console.h>
+#include <kernel/mmio.h>
 #include <kernel/plic.h>
 #include <kernel/trap.h>
 #include <kernel/uart.h>

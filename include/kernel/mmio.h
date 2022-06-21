@@ -1,5 +1,5 @@
-#ifndef __KERNEL_COMMON_DEFS_H
-#define __KERNEL_COMMON_DEFS_H
+#ifndef __KERNEL_MMIO_H
+#define __KERNEL_MMIO_H
 
 #include <stdint.h>
 
