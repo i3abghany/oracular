@@ -4,8 +4,8 @@
 #include <kernel/slab_alloc.h>
 #include <kernel/trap.h>
 #include <kernel/virtio_blk.h>
-#include <lib/stddef.h>
-#include <lib/string.h>
+#include <libc/stddef.h>
+#include <libc/string.h>
 
 static struct virtio_blk blk_device;
 static struct slab_t *virtio_blk_req_slab;

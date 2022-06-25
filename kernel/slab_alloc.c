@@ -1,7 +1,7 @@
 #include <kernel/console.h>
 #include <kernel/kmem.h>
 #include <kernel/slab_alloc.h>
-#include <lib/stddef.h>
+#include <libc/stddef.h>
 
 static void slab_add_mem(struct slab_t *slab, uint64_t start_addr, size_t size)
 {

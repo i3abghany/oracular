@@ -43,6 +43,7 @@ CFLAGS += -fno-builtin
 CFLAGS += -mno-relax
 CFLAGS += -fno-common
 CFLAGS += -Iinclude
+CFLAGS += -Iinclude/lib
 CFLAGS += -DORACULAR_KERNEL
 
 ASFLAGS =
@@ -103,7 +104,7 @@ TEST_FILES =
 TEST_FILES += test/kernel/slab_alloc_test.c
 
 LIB_FILES =
-LIB_FILES += lib/string.c
+LIB_FILES += lib/libc/string.c
 
 KOBJ_FILES = $(patsubst %.c, %.o, $(KSRC_FILES))
 KOBJ_FILES += $(patsubst %.S, %.o, $(KASM_FILES))
@@ -120,7 +121,8 @@ gdb: QEMU_FLAGS += -no-shutdown
 gdb: CFLAGS += -gdwarf-2
 gdb: ASFLAGS += -gdwarf-2
 gdb: kernel/kernel.elf
-	$(QEMU) -kernel $< $(QEMU_FLAGS)
+	@setsid $(QEMU) -kernel $< $(QEMU_FLAGS) & true
+	@echo "Run gdb-multiarch to connect to QEMU\n"
 
 # TODO: Only compile and link test files if `test` is the target.
 test: CFLAGS += -DKERNEL_TEST

@@ -1,7 +1,7 @@
 #include <kernel/console.h>
 #include <kernel/kmem.h>
-#include <lib/stddef.h>
-#include <lib/string.h>
+#include <libc/stddef.h>
+#include <libc/string.h>
 
 struct free_list_node *page_list;
 

@@ -1,7 +1,8 @@
 #ifndef _KERNEL_VIRTIO_BLK_H
 #define _KERNEL_VIRTIO_BLK_H
 
-#include "../lib/stdbool.h"
+#include <libc/stdbool.h>
+
 #include "kmem.h"
 #include "virtio.h"
 

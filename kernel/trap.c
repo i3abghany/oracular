@@ -5,8 +5,8 @@
 #include <kernel/trap.h>
 #include <kernel/uart.h>
 #include <kernel/virtio_blk.h>
-#include <lib/stdbool.h>
-#include <lib/stddef.h>
+#include <libc/stdbool.h>
+#include <libc/stddef.h>
 
 extern void trap_vec();
 

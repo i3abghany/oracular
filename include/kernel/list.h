@@ -1,7 +1,7 @@
 #ifndef _KERNEL_LIST_H
 #define _KERNEL_LIST_H
 
-#include "../lib/stddef.h"
+#include <libc/stddef.h>
 
 #define offset_of(base_type, field) ((size_t) & (((base_type *) 0)->field))
 
