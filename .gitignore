@@ -8,7 +8,7 @@ kernel/*.o
 kernel/*.elf
 
 test/kernel/*.o
-lib/*.o
+lib/libc/*.o
 
 .vscode/*
 
