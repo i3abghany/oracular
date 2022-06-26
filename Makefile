@@ -121,7 +121,7 @@ gdb: QEMU_FLAGS += -no-shutdown
 gdb: CFLAGS += -gdwarf-2
 gdb: ASFLAGS += -gdwarf-2
 gdb: kernel/kernel.elf
-	@setsid $(QEMU) -kernel $< $(QEMU_FLAGS) & true
+	$(QEMU) -kernel $< $(QEMU_FLAGS)
 	@echo "Run gdb-multiarch to connect to QEMU\n"
 
 # TODO: Only compile and link test files if `test` is the target.
@@ -140,7 +140,6 @@ kernel/kernel.elf: $(KOBJ_FILES) a.img
 
 a.img:
 	dd if=/dev/zero of=a.img count=10 bs=512
-
 
 format:
 	python3 scripts/format_files.py
