@@ -14,6 +14,7 @@ fi
 
 if [ "$1" = "clean" ]; then
     rm -rf gcc-build
+    rm -rf gcc-src
     exit
 fi
 

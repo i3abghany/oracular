@@ -146,9 +146,11 @@ format:
 	python3 scripts/format_files.py
 
 toolchain:
-	cd toolchain
-	./build.sh
-	cd ..
+	cd toolchain && ./build.sh
+
+clean_toolchain:
+	cd toolchain/binutils && ./build.sh clean
+	cd toolchain/gcc && ./build.sh clean
 
 .PHONY: clean test format toolchain
 clean:

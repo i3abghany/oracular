@@ -14,6 +14,7 @@ fi
 
 if [ "$1" = "clean" ]; then
     rm -rf binutils-build
+    rm -rf binutils-src
     exit
 fi
 
