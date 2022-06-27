@@ -156,5 +156,6 @@ clean_toolchain:
 
 .PHONY: clean test format toolchain
 clean:
-	rm -f kernel/*.o kernel/*.elf kernel/*.d test/kernel/*.o lib/*.o *.img
+	rm -f kernel/*.o kernel/*.elf kernel/*.d test/kernel/*.o *.img
+	rm -rf lib/libc/*.o
 
