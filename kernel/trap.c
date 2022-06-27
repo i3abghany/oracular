@@ -1,5 +1,6 @@
 #include <kernel/console.h>
 #include <kernel/kassert.h>
+#include <kernel/kthread.h>
 #include <kernel/plic.h>
 #include <kernel/rv.h>
 #include <kernel/trap.h>
@@ -71,6 +72,9 @@ static inline bool is_interrupt(uint64_t scause)
     return (scause & 0x8000000000000000) != 0;
 }
 
+extern struct thread_cxt thread_pool[N_THREADS];
+extern uint16_t next_available_tid;
+
 void ktrap()
 {
     uint64_t scause = get_scause();
@@ -90,9 +94,10 @@ void ktrap()
                 plic_acknowledge(irq);
             }
         } else if (trap_code == SUPERVISOR_SOFTWARE_INTERRUPT) {
-            kprintf("timer interrupt\n");
+            // kprintf("timer interrupt\n");
             /* Acknowledge the interrupt be resetting the pending bit. */
             set_sip(get_sip() & ~(1 << 1));
+            sched();
         }
     } else {
         panic("ktrap: Kernel exception\nscause: 0x%p, %s\nsepc: 0x%p\nstvec: 0x%p",

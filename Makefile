@@ -82,8 +82,9 @@ QEMU_FLAGS += -device virtio-blk-device,drive=x0,bus=virtio-mmio-bus.0
 
 KSRC_FILES =
 KSRC_FILES += kernel/console.c
-KSRC_FILES += kernel/kmem.c
 KSRC_FILES += kernel/kernel.c
+KSRC_FILES += kernel/kmem.c
+KSRC_FILES += kernel/kthread.c
 KSRC_FILES += kernel/plic.c
 KSRC_FILES += kernel/list.c
 KSRC_FILES += kernel/prekernel.c
@@ -99,6 +100,7 @@ KASM_FILES =
 KASM_FILES += kernel/entry.S
 KASM_FILES += kernel/kvec.S
 KASM_FILES += kernel/tvec.S
+KASM_FILES += kernel/switch.S
 
 TEST_FILES =
 TEST_FILES += test/kernel/slab_alloc_test.c

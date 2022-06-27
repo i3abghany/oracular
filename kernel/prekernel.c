@@ -8,7 +8,7 @@ uint64_t core_scratch[5];
 
 void timer_init()
 {
-    uint64_t interrupt_interval = 10000000;
+    uint64_t interrupt_interval = 5000000;
     uint64_t mtime = *CLINT_MTIME;
     *CLINT_MTIMECMP = mtime + interrupt_interval;
 

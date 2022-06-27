@@ -16,7 +16,7 @@ timer_vec:
     sd a3, 0(a1)           # Re-store the value.
 
     li a1, (1 << 1)
-    csrw sip, a1           # Set software interrupt pending.
+    csrw sip, a1           # Set supervior software interrupt pending.
 
     ld a1, 0(a0)           #
     ld a2, 8(a0)           # Restore state.
