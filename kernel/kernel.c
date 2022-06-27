@@ -8,13 +8,14 @@
 #include <kernel/slab_alloc.h>
 #include <kernel/virtio_blk.h>
 #include <kernel/vm.h>
+#include <libc/string.h>
 #include <stdint.h>
 
 void thread3_proc()
 {
     while (1) {
         kprintf("In Thread 3\n");
-        for (int i = 0; i < 20000000; i++) {
+        for (int i = 0; i < 200000000; i++) {
             asm volatile("nop");
         }
     }
@@ -24,7 +25,7 @@ void thread1_proc()
 {
     while (1) {
         kprintf("In Thread 1\n");
-        for (int i = 0; i < 20000000; i++) {
+        for (int i = 0; i < 200000000; i++) {
             asm volatile("nop");
         }
     }
@@ -34,7 +35,7 @@ void thread2_proc()
 {
     while (1) {
         kprintf("In Thread 2\n");
-        for (int i = 0; i < 20000000; i++) {
+        for (int i = 0; i < 200000000; i++) {
             asm volatile("nop");
         }
     }
@@ -60,9 +61,13 @@ void kmain(void)
     set_sstatus(get_sstatus() | (1 << 1));
     kprintf("done\n");
 
+    kprintf("Initializing the platform-level interrupt controller (PLIC)...");
     plic_init();
+    kprintf("done\n");
 
+    kprintf("Initializing the VirtIO secondary storage block device...");
     virtio_blk_init();
+    kprintf("done\n");
 
     add_thread(thread1_proc);
     add_thread(thread2_proc);
@@ -71,7 +76,9 @@ void kmain(void)
 #ifdef KERNEL_TEST
     void slab_alloc_tests();
     slab_alloc_tests();
-    qemu_virt_shutdown(PASS);
+    void virtio_blk_tests();
+    virtio_blk_tests();
+    // qemu_virt_shutdown(PASS);
 #endif
 
     while (1)

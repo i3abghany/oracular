@@ -104,6 +104,7 @@ KASM_FILES += kernel/switch.S
 
 TEST_FILES =
 TEST_FILES += test/kernel/slab_alloc_test.c
+TEST_FILES += test/kernel/virtio_blk_req_test.c
 
 LIB_FILES =
 LIB_FILES += lib/libc/string.c

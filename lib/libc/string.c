@@ -11,3 +11,10 @@ void *memset(void *dest, int c, size_t size)
 
     return dest;
 }
+
+size_t strlen(const char *str)
+{
+    size_t res = 0;
+    while (*str) str++, res++;
+    return res;
+}
