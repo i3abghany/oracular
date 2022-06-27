@@ -64,8 +64,6 @@ void kmain(void)
 
     virtio_blk_init();
 
-    kprintf("offset of ___: %d", (int) offset_of(struct thread_cxt, pc));
-
     add_thread(thread1_proc);
     add_thread(thread2_proc);
     add_thread(thread3_proc);
