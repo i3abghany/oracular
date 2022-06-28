@@ -10,7 +10,7 @@ static uint64_t alloc_thread_stack()
 {
     /* one page, for now */
     void *start = page_alloc();
-    kprintf("alloc stack @ 0x%p\n", (uint64_t) start);
+    kprintf("alloc_thread_stack: Alloc new stack @ 0x%p\n", (uint64_t) start);
     return (uint64_t) start;
 }
 
@@ -28,13 +28,15 @@ void add_thread(void (*f)(void))
         }
     }
 
-    panic("Can't add thread...");
+    panic("add_thread: No available thread pool unused objects.\n");
 }
 
 void sched()
 {
     struct thread_cxt *cxt_next = NULL;
     struct thread_cxt *cxt_curr = NULL;
+
+    kprintf("sched: Starting a new scheduling round.\n");
 
     for (int i = 0; i < N_THREADS; i++) {
         if (thread_pool[i].state == RUNNING) {
